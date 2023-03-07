@@ -2,19 +2,75 @@
 //
 
 #include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+// 
+const GLint WIDTH = 800, HEIGHT = 600;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::cout << "Hello World!\n";
+
+	// 初始化 GLFW
+	if (!glfwInit())
+	{
+		printf("GLFW initialisation faild");
+		glfwTerminate();
+		return 1;
+	}
+
+	// 设置 GLFW 窗口属性
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	// Core profile = No Backwards Compatibility
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	// Allow forward compatibility
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+	GLFWwindow* mainWindow = glfwCreateWindow(WIDTH, HEIGHT, "Test", NULL, NULL);
+
+	if (!mainWindow)
+	{
+		printf("GLFW window creation faild");
+		glfwTerminate();
+		return 1;
+	}
+
+	// 获取缓冲大小信息
+	int bufferWidth = 0, bufferHeight = 0;
+	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferWidth);
+
+
+	// 设置上下文
+	glfwMakeContextCurrent(mainWindow);
+
+	// 允许使用 GLEW 实验功能
+	glewExperimental = GL_TRUE;
+
+	if (glewInit() != GLEW_OK)
+	{
+		printf("GLEW initialisation faild");
+		glfwDestroyWindow(mainWindow);
+		glfwTerminate();
+		return 1;
+	}
+
+	// 设置视口大小
+	glViewport(0, 0, bufferWidth, bufferHeight);
+
+	// 循环，直到窗口关闭
+	while (!glfwWindowShouldClose(mainWindow))
+	{
+		// 获取并处理事件
+		glfwPollEvents();
+
+		// 清除窗口
+		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glfwSwapBuffers(mainWindow);
+	}
+
+	return 0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
