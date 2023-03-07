@@ -400,4 +400,4 @@ FodyWeavers.xsd
 .idea/
 
 
-!ExternalLibs/*
+!/ExternalLibs/*
