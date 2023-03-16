@@ -11,7 +11,9 @@
 const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
-GLuint VAO, VBO, shader, uniformModel; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
+GLuint VAO, VBO; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
+GLuint IBO; // IBO = Index Buffer Object
+GLuint shader, uniformModel;
 
 bool direction = true;
 float triOffset = 0.0f; // 三角形偏移量
@@ -56,14 +58,28 @@ colour = vCol;																	\n\
 
 void CreateTriangle()
 {
+	// 顶点索引
+	unsigned int indices[] = {
+			0, 3, 1,
+			1, 3, 2,
+			2, 3, 0,
+			0, 1, 2
+	};
+
+	// 顶点数组
 	GLfloat vertices[] = {
 		-1.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 1.0f,
 		1.0f, -1.0f, 0.0f,
 		0.0f, 1.0f, 0.0f
 	};
 
 	glGenVertexArrays(1, &VAO); // 生成一个 VAO
 	glBindVertexArray(VAO); // 绑定 VAO
+
+	glGenBuffers(1, &IBO); // 生成一个 IBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // 绑定 IBO
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); // 把索引数组复制到缓冲中供 OpenGL 使用
 
 	glGenBuffers(1, &VBO); // 生成一个 VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO); // 绑定 VBO
@@ -75,6 +91,9 @@ void CreateTriangle()
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // 解绑 VBO
 
 	glBindVertexArray(0); // 解绑 VAO
+
+	// IBO、EBO的解绑应该在VAO的解绑之后
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // 解绑 IBO
 }
 
 // 添加着色器
@@ -194,6 +213,8 @@ int main()
 		return 1;
 	}
 
+	glEnable(GL_DEPTH_TEST); // 开启深度测试
+
 	// 创建并设置设置视口大小
 	glViewport(0, 0, bufferWidth, bufferHeight);
 
@@ -243,21 +264,23 @@ int main()
 
 		// 清除窗口
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 清除颜色缓冲和深度缓冲
 
 		glUseProgram(shader); // 使用着色器
 
 		glm::mat4 model(1.0f); // 创建模型矩阵
 
-		//model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f)); // 平移
-		//model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f)); // 旋转
+		model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 1.0f)); // 旋转
+		model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f)); // 平移
 		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 (矩阵)
 
 		glBindVertexArray(VAO); // 绑定 VAO
-		glDrawArrays(GL_TRIANGLES, 0, 3); // 绘制三角形
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // 绑定 IBO
+		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0); // 绘制三角形
 		glBindVertexArray(0); // 解绑 VAO
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // 解绑 IBO
 
 		glUseProgram(0); // 不使用着色器
 
