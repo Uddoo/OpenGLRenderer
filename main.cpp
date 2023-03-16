@@ -13,7 +13,9 @@ const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
 GLuint VAO, VBO; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
 GLuint IBO; // IBO = Index Buffer Object
-GLuint shader, uniformModel;
+GLuint shader;
+GLuint uniformModel; // uniformModel = uniform model
+GLuint uniformProjection; // uniformProjection = uniform projection
 
 bool direction = true;
 float triOffset = 0.0f; // 三角形偏移量
@@ -36,10 +38,11 @@ layout (location = 0) in vec3 pos;												\n\
 out vec4 vCol;																	\n\
 																				\n\
 uniform mat4 model;																\n\
+uniform mat4 projection;														\n\
 																				\n\
 void main()																		\n\
 {																				\n\
-	gl_Position = model * vec4(pos.x, pos.y, pos.z, 1.0);						\n\
+	gl_Position = projection * model * vec4(pos.x, pos.y, pos.z, 1.0);			\n\
 	vCol = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);									\n\
 }";
 
@@ -161,7 +164,8 @@ void CompileShaders()
 		return;
 	}
 
-	uniformModel = glGetUniformLocation(shader, "model"); // 获取 uniform 变量的位置
+	uniformModel = glGetUniformLocation(shader, "model"); // 获取 uniform 变量 model 的位置
+	uniformProjection = glGetUniformLocation(shader, "projection"); // 获取 uniform 变量 projection 的位置
 }
 
 int main()
@@ -221,6 +225,8 @@ int main()
 	CreateTriangle(); // 创建三角形
 	CompileShaders(); // 编译着色器
 
+	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)bufferWidth / (GLfloat)bufferHeight, 0.1f, 100.0f); // 创建投影矩阵
+
 	// 循环，直到窗口关闭
 	while (!glfwWindowShouldClose(mainWindow))
 	{
@@ -270,11 +276,12 @@ int main()
 
 		glm::mat4 model(1.0f); // 创建模型矩阵
 
-		model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 1.0f)); // 旋转
-		model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f)); // 平移
+		//model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 1.0f)); // 旋转
+		model = glm::translate(model, glm::vec3(triOffset, 0.0f, -2.0f)); // 平移
 		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
 
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 (矩阵)
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
 
 		glBindVertexArray(VAO); // 绑定 VAO
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // 绑定 IBO
