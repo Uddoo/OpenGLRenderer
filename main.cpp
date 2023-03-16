@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <stdlib.h>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -8,11 +9,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Mesh.h"
+
 const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
-GLuint VAO, VBO; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
-GLuint IBO; // IBO = Index Buffer Object
+std::vector<Mesh*> meshList; // 网格列表
+
 GLuint shader;
 GLuint uniformModel; // uniformModel = uniform model
 GLuint uniformProjection; // uniformProjection = uniform projection
@@ -77,26 +80,9 @@ void CreateTriangle()
 		0.0f, 1.0f, 0.0f
 	};
 
-	glGenVertexArrays(1, &VAO); // 生成一个 VAO
-	glBindVertexArray(VAO); // 绑定 VAO
-
-	glGenBuffers(1, &IBO); // 生成一个 IBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // 绑定 IBO
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); // 把索引数组复制到缓冲中供 OpenGL 使用
-
-	glGenBuffers(1, &VBO); // 生成一个 VBO
-	glBindBuffer(GL_ARRAY_BUFFER, VBO); // 绑定 VBO
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // 把顶点数组复制到缓冲中供 OpenGL 使用
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // 设置顶点属性指针
-	glEnableVertexAttribArray(0); // 启用顶点属性
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // 解绑 VBO
-
-	glBindVertexArray(0); // 解绑 VAO
-
-	// IBO、EBO的解绑应该在VAO的解绑之后
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // 解绑 IBO
+	Mesh* obj1 = new Mesh();
+	obj1->CreateMesh(vertices, indices, 12, 12);
+	meshList.push_back(obj1);
 }
 
 // 添加着色器
@@ -283,11 +269,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
 
-		glBindVertexArray(VAO); // 绑定 VAO
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // 绑定 IBO
-		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0); // 绘制三角形
-		glBindVertexArray(0); // 解绑 VAO
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // 解绑 IBO
+		meshList[0]->RenderMesh();
 
 		glUseProgram(0); // 不使用着色器
 
