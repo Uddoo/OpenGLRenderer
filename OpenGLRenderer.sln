@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLCourseApp", "OpenGLCourseApp.vcxproj", "{3C9217D0-898F-4210-8887-273C2972C84C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLRenderer", "OpenGLRenderer.vcxproj", "{3C9217D0-898F-4210-8887-273C2972C84C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F21ECFFD-C124-4B86-949C-4185CC620173}
+		SolutionGuid = {F270A698-F447-4460-B6C0-E350F4F6BDC8}
 	EndGlobalSection
 EndGlobal
