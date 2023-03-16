@@ -9,13 +9,16 @@
 #include <glm/gtc/type_ptr.hpp>
 
 const GLint WIDTH = 800, HEIGHT = 600;
+const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
 GLuint VAO, VBO, shader, uniformModel; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
 
 bool direction = true;
 float triOffset = 0.0f; // 三角形偏移量
 float triMaxOffset = 0.7f; // 三角形最大偏移量
-float triIncrement = 0.0005f; // 三角形偏移量增量
+float triIncrement = 0.0055f; // 三角形偏移量增量
+
+float curAngle = 0.0f; // 当前角度
 
 // Vertex Shader
 static const char* vShader = "													\n\
@@ -23,7 +26,7 @@ static const char* vShader = "													\n\
 																				\n\
 layout (location = 0) in vec3 pos;												\n\
 																				\n\
-uniform mat4 model;															\n\
+uniform mat4 model;																\n\
 																				\n\
 void main()																		\n\
 {																				\n\
@@ -38,7 +41,7 @@ out vec4 colour;																\n\
 																				\n\
 void main()																		\n\
 {																				\n\
-colour = vec4(1.0, 0.0, 0.0, 1.0);											\n\
+colour = vec4(1.0, 0.0, 0.0, 1.0);												\n\
 }";
 
 void CreateTriangle()
@@ -208,6 +211,12 @@ int main()
 			direction = !direction;
 		}
 
+		curAngle += 0.05f;
+		if (curAngle >= 360)
+		{
+			curAngle -= 360;
+		}
+
 		// 清除窗口
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -215,7 +224,9 @@ int main()
 		glUseProgram(shader); // 使用着色器
 
 		glm::mat4 model(1.0f); // 创建模型矩阵
-		model = glm::translate(model, glm::vec3(triOffset, triOffset, 0.0f)); // 平移
+
+		model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f)); // 平移
+		model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f)); // 旋转
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 (矩阵)
 
