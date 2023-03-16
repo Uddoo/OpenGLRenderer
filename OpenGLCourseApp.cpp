@@ -1,14 +1,16 @@
-﻿// OpenGLCourseApp.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿#include <iostream>
+#include <stdlib.h>
 
-#include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <stdlib.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 const GLint WIDTH = 800, HEIGHT = 600;
 
-GLuint VAO, VBO, shader, uniformXMove; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
+GLuint VAO, VBO, shader, uniformModel; // VAO = Vertex Array Object, VBO = Vertex Buffer Object
 
 bool direction = true;
 float triOffset = 0.0f; // 三角形偏移量
@@ -127,7 +129,7 @@ void CompileShaders()
 		return;
 	}
 
-	uniformXMove = glGetUniformLocation(shader, "xMove"); // 获取 uniform 变量的位置
+	uniformModel = glGetUniformLocation(shader, "xMove"); // 获取 uniform 变量的位置
 }
 
 int main()
@@ -212,7 +214,7 @@ int main()
 
 		glUseProgram(shader); // 使用着色器
 
-		glUniform1f(uniformXMove, triOffset);
+		glUniform1f(uniformModel, triOffset);
 
 		glBindVertexArray(VAO); // 绑定 VAO
 		glDrawArrays(GL_TRIANGLES, 0, 3); // 绘制三角形
