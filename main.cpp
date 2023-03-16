@@ -10,15 +10,14 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Mesh.h"
+#include "Shader.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
 std::vector<Mesh*> meshList; // 网格列表
 
-GLuint shader;
-GLuint uniformModel; // uniformModel = uniform model
-GLuint uniformProjection; // uniformProjection = uniform projection
+std::vector<Shader*> shaderList; // 着色器列表
 
 bool direction = true;
 float triOffset = 0.0f; // 三角形偏移量
@@ -62,7 +61,7 @@ void main()																		\n\
 colour = vCol;																	\n\
 }";
 
-void CreateTriangle()
+void CreateObjects()
 {
 	// 顶点索引
 	unsigned int indices[] = {
@@ -89,73 +88,11 @@ void CreateTriangle()
 	meshList.push_back(obj2);
 }
 
-// 添加着色器
-void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+void CreateShaders()
 {
-	GLuint theShader = glCreateShader(shaderType); // 创建着色器
-
-	// 指定着色器源代码
-	const GLchar* theCode[1];
-	theCode[0] = shaderCode;
-
-	// 指定源代码长度
-	GLint codeLength[1];
-	codeLength[0] = strlen(shaderCode);
-
-	glShaderSource(theShader, 1, theCode, codeLength); // 把着色器源代码附加到着色器对象上
-	glCompileShader(theShader); // 编译着色器
-
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
-
-	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result); // 检查链接状态
-	if (!result)
-	{
-		glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog); // 获取错误信息
-		fprintf(stderr, "Error compling the %d shader : '%s'\n", shaderType, eLog);
-		return;
-	}
-
-	glAttachShader(theProgram, theShader); // 把着色器附加到着色器程序上
-}
-
-// 编译着色器
-void CompileShaders()
-{
-	shader = glCreateProgram(); // 创建着色器程序
-
-	if (!shader)
-	{
-		printf("Error creating shader program!");
-		return;
-	}
-
-	AddShader(shader, vShader, GL_VERTEX_SHADER);
-	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
-
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
-
-	glLinkProgram(shader); // 链接着色器
-	glGetProgramiv(shader, GL_LINK_STATUS, &result); // 检查链接状态
-	if (!result)
-	{
-		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog); // 获取错误信息
-		printf("Error linking program: '%s'\n", eLog);
-		return;
-	}
-
-	glValidateProgram(shader); // 验证着色器
-	glGetProgramiv(shader, GL_VALIDATE_STATUS, &result); // 检查验证状态
-	if (!result)
-	{
-		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog); // 获取错误信息
-		printf("Error validating program: '%s'\n", eLog);
-		return;
-	}
-
-	uniformModel = glGetUniformLocation(shader, "model"); // 获取 uniform 变量 model 的位置
-	uniformProjection = glGetUniformLocation(shader, "projection"); // 获取 uniform 变量 projection 的位置
+	Shader* shader1 = new Shader();
+	shader1->CreateFromString(vShader, fShader);
+	shaderList.push_back(shader1);
 }
 
 int main()
@@ -212,9 +149,10 @@ int main()
 	// 创建并设置设置视口大小
 	glViewport(0, 0, bufferWidth, bufferHeight);
 
-	CreateTriangle(); // 创建三角形
-	CompileShaders(); // 编译着色器
+	CreateObjects(); // 创建三角形
+	CreateShaders(); // 创建着色器
 
+	GLuint uniformProjection = 0, uniformModel = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)bufferWidth / (GLfloat)bufferHeight, 0.1f, 100.0f); // 创建投影矩阵
 
 	// 循环，直到窗口关闭
@@ -262,7 +200,9 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 清除颜色缓冲和深度缓冲
 
-		glUseProgram(shader); // 使用着色器
+		shaderList[0]->UseShader();
+		uniformModel = shaderList[0]->GetModelLocation();
+		uniformProjection = shaderList[0]->GetProjectionLocation();
 
 		glm::mat4 model(1.0f); // 创建模型矩阵
 
