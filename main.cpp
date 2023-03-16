@@ -83,6 +83,10 @@ void CreateTriangle()
 	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 12, 12);
 	meshList.push_back(obj1);
+
+	Mesh* obj2 = new Mesh();
+	obj2->CreateMesh(vertices, indices, 12, 12);
+	meshList.push_back(obj2);
 }
 
 // 添加着色器
@@ -265,11 +269,15 @@ int main()
 		//model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 1.0f)); // 旋转
 		model = glm::translate(model, glm::vec3(triOffset, 0.0f, -2.0f)); // 平移
 		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
-
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
-
 		meshList[0]->RenderMesh();
+
+		model = glm::mat4(1.0f); // 重置模型矩阵
+		model = glm::translate(model, glm::vec3(0.0f, triOffset, -2.0f)); // 平移
+		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		meshList[1]->RenderMesh();
 
 		glUseProgram(0); // 不使用着色器
 
