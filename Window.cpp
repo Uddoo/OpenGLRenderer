@@ -4,12 +4,22 @@ Window::Window()
 {
 	width = 800;
 	height = 600;
+
+	for (size_t i = 0; i < 1024; i++)
+	{
+		keys[i] = 0;
+	}
 }
 
 Window::Window(GLint windowWidth, GLint windowHeight)
 {
 	width = windowWidth;
 	height = windowHeight;
+
+	for (size_t i = 0; i < 1024; i++)
+	{
+		keys[i] = 0;
+	}
 }
 
 int Window::Initialise()
@@ -46,6 +56,9 @@ int Window::Initialise()
 	// 设置上下文
 	glfwMakeContextCurrent(mainWindow);
 
+	// 处理键盘和鼠标输入
+	CreateCallbacks();
+
 	// 允许使用 GLEW 实验功能
 	glewExperimental = GL_TRUE;
 
@@ -61,10 +74,39 @@ int Window::Initialise()
 
 	// 创建并设置设置视口大小
 	glViewport(0, 0, bufferWidth, bufferHeight);
+
+	glfwSetWindowUserPointer(mainWindow, this); // 设置窗口用户指针
 }
 
 Window::~Window()
 {
 	glfwDestroyWindow(mainWindow);
 	glfwTerminate();
+}
+
+void Window::CreateCallbacks()
+{
+	glfwSetKeyCallback(mainWindow, HandleKeys); // 设置键盘按键回调函数
+}
+
+void Window::HandleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+{
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window)); // 获取窗口用户指针
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) // 按下 ESC 键
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE); // 设置窗口应该关闭
+	}
+
+	if (key >= 0 && key < 1024) // 如果键入的key是有效值
+	{
+		if (action == GLFW_PRESS) // 按下
+		{
+			theWindow->keys[key] = true;
+		}
+		else if (action == GLFW_RELEASE) // 释放
+		{
+			theWindow->keys[key] = false;
+		}
+	}
 }

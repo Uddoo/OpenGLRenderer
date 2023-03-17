@@ -27,5 +27,10 @@ private:
 
 	GLint width, height; // 窗口宽度和高度
 	GLint bufferWidth, bufferHeight; // 缓冲区宽度和高度
+
+	bool keys[1024]; // 键盘按键
+
+	void CreateCallbacks(); // 创建回调函数
+	static void HandleKeys(GLFWwindow* window, int key, int code, int action, int mode); // 键盘按键回调函数
 };
 
