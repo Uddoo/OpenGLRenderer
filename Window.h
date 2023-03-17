@@ -37,8 +37,8 @@ private:
 
 	GLfloat lastX;
 	GLfloat lastY;
-	GLfloat xChange;
-	GLfloat yChange;
+	GLfloat xChange = 0.0f;
+	GLfloat yChange = 0.0f;
 
 	bool mouseFirstMoved; // 鼠标是否第一次移动
 
