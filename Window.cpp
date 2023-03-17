@@ -58,6 +58,7 @@ int Window::Initialise()
 
 	// 处理键盘和鼠标输入
 	CreateCallbacks();
+	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 隐藏鼠标
 
 	// 允许使用 GLEW 实验功能
 	glewExperimental = GL_TRUE;
@@ -78,6 +79,20 @@ int Window::Initialise()
 	glfwSetWindowUserPointer(mainWindow, this); // 设置窗口用户指针
 }
 
+GLfloat Window::GetXChange()
+{
+	GLfloat theChange = xChange;
+	xChange = 0.0f;
+	return theChange;
+}
+
+GLfloat Window::GetYChange()
+{
+	GLfloat theChange = yChange;
+	yChange = 0.0f;
+	return theChange;
+}
+
 Window::~Window()
 {
 	glfwDestroyWindow(mainWindow);
@@ -87,6 +102,7 @@ Window::~Window()
 void Window::CreateCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, HandleKeys); // 设置键盘按键回调函数
+	glfwSetCursorPosCallback(mainWindow, HandleMouse); // 设置鼠标移动回调函数
 }
 
 void Window::HandleKeys(GLFWwindow* window, int key, int code, int action, int mode)
@@ -109,4 +125,22 @@ void Window::HandleKeys(GLFWwindow* window, int key, int code, int action, int m
 			theWindow->keys[key] = false;
 		}
 	}
+}
+
+void Window::HandleMouse(GLFWwindow* window, double xPos, double yPos)
+{
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window)); // 获取窗口用户指针
+
+	if (theWindow->mouseFirstMoved)
+	{
+		theWindow->lastX = xPos;
+		theWindow->lastY = yPos;
+		theWindow->mouseFirstMoved = false;
+	}
+
+	theWindow->xChange = xPos - theWindow->lastX;
+	theWindow->yChange = theWindow->lastY - yPos; // 避免上下颠倒
+
+	theWindow->lastX = xPos;
+	theWindow->lastY = yPos;
 }

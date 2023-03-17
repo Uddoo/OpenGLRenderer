@@ -63,8 +63,6 @@ void CreateShaders()
 
 int main()
 {
-	std::cout << "Hello OpenGL!\n";
-
 	mainWindow = Window(800, 600);
 	mainWindow.Initialise();
 
