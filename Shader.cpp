@@ -54,6 +54,11 @@ GLint Shader::GetModelLocation()
 	return uniformModel;
 }
 
+GLint Shader::GetViewLocation()
+{
+	return uniformView;
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(shaderID); // 使用着色器
@@ -112,6 +117,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 
 	uniformModel = glGetUniformLocation(shaderID, "model"); // 获取 uniform 变量 model 的位置
 	uniformProjection = glGetUniformLocation(shaderID, "projection"); // 获取 uniform 变量 projection 的位置
+	uniformView = glGetUniformLocation(shaderID, "view"); // 获取 uniform 变量 view 的位置
 }
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)

@@ -12,10 +12,16 @@
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Camera.h"
 
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
 Window mainWindow; // 主窗口
+
+Camera camera; // 相机
+
+GLfloat deltaTime = 0.0f; // 帧间隔时间
+GLfloat lastTime = 0.0f;
 
 std::vector<Mesh*> meshList; // 网格列表
 
@@ -69,14 +75,23 @@ int main()
 	CreateObjects(); // 创建三角形
 	CreateShaders(); // 创建着色器
 
-	GLuint uniformProjection = 0, uniformModel = 0;
-	glm::mat4 projection = glm::perspective(45.0f, mainWindow.GetBufferWidth() / mainWindow.GetBufferHeight(), 0.1f, 100.0f); // 创建投影矩阵
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 1.0f);
+
+	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
+	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.GetBufferWidth() / (GLfloat)mainWindow.GetBufferHeight(), 0.1f, 100.0f); // 创建投影矩阵
 
 	// 循环，直到窗口关闭
 	while (!mainWindow.GetShouldClose())
 	{
+		GLfloat now = glfwGetTime(); // SDL_GetPerformanceCounter();
+		deltaTime = now - lastTime; // (now - lastTime) * 1000 / SDL_GetPerformanceFrequency();
+		lastTime = now;
+
 		// 获取并处理事件
 		glfwPollEvents();
+
+		camera.KeyControl(mainWindow.GetKeys(), deltaTime); // 键盘控制
+		camera.MouseControl(mainWindow.GetXChange(), mainWindow.GetYChange()); // 鼠标控制
 
 		// 清除窗口
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -85,6 +100,7 @@ int main()
 		shaderList[0]->UseShader();
 		uniformModel = shaderList[0]->GetModelLocation();
 		uniformProjection = shaderList[0]->GetProjectionLocation();
+		uniformView = shaderList[0]->GetViewLocation();
 
 		glm::mat4 model(1.0f); // 创建模型矩阵
 
@@ -93,6 +109,7 @@ int main()
 		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
 		meshList[0]->RenderMesh();
 
 		model = glm::mat4(1.0f); // 重置模型矩阵

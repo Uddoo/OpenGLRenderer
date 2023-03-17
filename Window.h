@@ -13,8 +13,8 @@ public:
 
 	int Initialise(); // 初始化
 
-	GLfloat GetBufferWidth() const { return bufferWidth; }
-	GLfloat GetBufferHeight() const { return bufferHeight; }
+	GLint GetBufferWidth() const { return bufferWidth; }
+	GLint GetBufferHeight() const { return bufferHeight; }
 
 	bool GetShouldClose() const { return glfwWindowShouldClose(mainWindow); } // 获取窗口是否应该关闭
 

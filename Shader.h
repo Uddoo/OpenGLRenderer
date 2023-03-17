@@ -19,6 +19,7 @@ public:
 
 	GLint GetProjectionLocation(); // 获取投影位置
 	GLint GetModelLocation(); // 获取模型位置
+	GLint GetViewLocation(); // 获取视图位置
 
 	void UseShader(); // 使用着色器
 	void ClearShader(); // 清除着色器
@@ -27,6 +28,7 @@ public:
 
 private:
 	GLuint shaderID, uniformProjection, uniformModel; // shaderID = shader ID, uniformProjection = uniform projection, uniformModel = uniform model
+	GLuint uniformView; // uniformView = uniform view
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
