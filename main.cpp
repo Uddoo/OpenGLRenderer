@@ -15,12 +15,16 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Texture.h"
 
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
 Window mainWindow; // 主窗口
 
 Camera camera; // 相机
+
+Texture brickTexture;
+Texture dirtTexture;
 
 GLfloat deltaTime = 0.0f; // 帧间隔时间
 GLfloat lastTime = 0.0f;
@@ -47,18 +51,19 @@ void CreateObjects()
 
 	// 顶点数组
 	GLfloat vertices[] = {
-		-1.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
+		//  x      y     z     u     v
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		 0.0f, -1.0f, 1.0f, 0.5f, 0.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 0.0f, 1.0f, 0.0f, 0.5f, 1.0f
 	};
 
 	Mesh* obj1 = new Mesh();
-	obj1->CreateMesh(vertices, indices, 12, 12);
+	obj1->CreateMesh(vertices, indices, 20, 12);
 	meshList.push_back(obj1);
 
 	Mesh* obj2 = new Mesh();
-	obj2->CreateMesh(vertices, indices, 12, 12);
+	obj2->CreateMesh(vertices, indices, 20, 12);
 	meshList.push_back(obj2);
 }
 
@@ -78,6 +83,11 @@ int main()
 	CreateShaders(); // 创建着色器
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 1.0f);
+
+	brickTexture = Texture("Textures/brick.png");
+	brickTexture.LoadTexture(); // 加载纹理
+	dirtTexture = Texture("Textures/dirt.png");
+	dirtTexture.LoadTexture();
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.GetBufferWidth() / (GLfloat)mainWindow.GetBufferHeight(), 0.1f, 100.0f); // 创建投影矩阵
@@ -112,12 +122,14 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
+		brickTexture.UseTexture();
 		meshList[0]->RenderMesh();
 
 		model = glm::mat4(1.0f); // 重置模型矩阵
 		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.0f)); // 平移
 		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		dirtTexture.UseTexture();
 		meshList[1]->RenderMesh();
 
 		glUseProgram(0); // 不使用着色器
