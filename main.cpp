@@ -1,4 +1,6 @@
-﻿#include <iostream>
+﻿#define STB_IMAGE_IMPLEMENTATION
+
+#include <iostream>
 #include <stdlib.h>
 #include <vector>
 
