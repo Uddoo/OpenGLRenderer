@@ -94,6 +94,12 @@ GLuint Shader::GetEyePositionLocation()
 	return uniformEyePosition;
 }
 
+void Shader::SetDirectionalLight(DirectionalLight* dLight)
+{
+	dLight->UseLight(uniformDirectionalLight.uniformAmbientIntensity, uniformDirectionalLight.uniformColour,
+		uniformDirectionalLight.uniformDiffuseIntensity, uniformDirectionalLight.uniformDirection);
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(shaderID); // 使用着色器

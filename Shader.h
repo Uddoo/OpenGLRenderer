@@ -34,6 +34,8 @@ public:
 	GLuint GetShininessLocation(); // 获取高光指数位置
 	GLuint GetEyePositionLocation(); // 获取眼睛位置
 
+	void SetDirectionalLight(DirectionalLight* dLight); // 设置平行光
+
 	void UseShader(); // 使用着色器
 	void ClearShader(); // 清除着色器
 

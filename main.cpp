@@ -168,8 +168,10 @@ int main()
 		uniformShininess = shaderList[0]->GetShininessLocation();
 		uniformEyePosition = shaderList[0]->GetEyePositionLocation();
 
-		mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,
-			uniformDiffuseIntensity, uniformDirection); // 使用光源
+		shaderList[0]->SetDirectionalLight(&mainLight);
+
+		//mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,
+		//	uniformDiffuseIntensity, uniformDirection); // 使用光源
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
