@@ -44,19 +44,39 @@ std::string Shader::ReadFile(const char* fileLocation)
 	return content;
 }
 
-GLint Shader::GetProjectionLocation()
+GLuint Shader::GetProjectionLocation()
 {
 	return uniformProjection;
 }
 
-GLint Shader::GetModelLocation()
+GLuint Shader::GetModelLocation()
 {
 	return uniformModel;
 }
 
-GLint Shader::GetViewLocation()
+GLuint Shader::GetViewLocation()
 {
 	return uniformView;
+}
+
+GLuint Shader::GetAmbientIntensityLocation()
+{
+	return uniformAmbientIntensity;
+}
+
+GLuint Shader::GetAmbientColourLocation()
+{
+	return uniformAmbientColour;
+}
+
+GLuint Shader::GetDiffuseIntensityLocation()
+{
+	return uniformDiffuseIntensity;
+}
+
+GLuint Shader::GetDirectionLocation()
+{
+	return uniformDirection;
 }
 
 void Shader::UseShader()
@@ -118,6 +138,13 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformModel = glGetUniformLocation(shaderID, "model"); // 获取 uniform 变量 model 的位置
 	uniformProjection = glGetUniformLocation(shaderID, "projection"); // 获取 uniform 变量 projection 的位置
 	uniformView = glGetUniformLocation(shaderID, "view"); // 获取 uniform 变量 view 的位置
+
+	uniformAmbientColour = glGetUniformLocation(shaderID, "directionalLight.colour"); // 获取 uniform 变量 directionalLight.colour 的位置
+	uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity"); // 获取 uniform 变量 directionalLight.ambientIntensity 的位置
+
+	uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction"); // 获取 uniform 变量 directionalLight.direction 的位置
+	uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity"); // 获取 uniform 变量 directionalLight.diffuseIntensity 的位置
+	// 上面这一行原来写成了 == ， 导致没有漫反射光效果
 }
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)

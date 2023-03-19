@@ -23,10 +23,12 @@ void Mesh::CreateMesh(GLfloat* vertices, unsigned* indices, unsigned numOfVertic
 	glBindBuffer(GL_ARRAY_BUFFER, VBO); // 绑定 VBO
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numOfVertices, vertices, GL_STATIC_DRAW); // 把顶点数组复制到缓冲中供 OpenGL 使用
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0); // 设置顶点属性指针
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, 0); // 设置顶点属性指针
 	glEnableVertexAttribArray(0); // 启用顶点属性
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void*)(sizeof(vertices[0]) * 3)); // 设置材质属性指针
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void*)(sizeof(vertices[0]) * 3)); // 设置材质属性指针
 	glEnableVertexAttribArray(1); // 启用材质属性
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void*)(sizeof(vertices[0]) * 5)); // 设置法线属性指针
+	glEnableVertexAttribArray(2); // 启用法线属性
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // 解绑 VBO
 
