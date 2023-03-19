@@ -15,7 +15,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 #include "Material.h"
 
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
@@ -30,7 +30,7 @@ Texture dirtTexture;
 Material shinyMaterial; // 高光材质
 Material dullMaterial; // 低光材质
 
-Light mainLight; // 光源
+DirectionalLight mainLight; // 光源
 
 GLfloat deltaTime = 0.0f; // 帧间隔时间
 GLfloat lastTime = 0.0f;
@@ -129,8 +129,9 @@ int main()
 	shinyMaterial = Material(1.0f, 32);
 	dullMaterial = Material(0.3f, 4);
 
-	mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, /*环境光光源*/
-		0.0f, -1.0f, -2.0f, 0.5f); // 漫反射光源
+	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+		0.2f, /*环境光光源*/ 0.5f,
+		0.0f, -1.0f, -2.0f); // 漫反射光源
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformAmbientIntensity = 0, uniformAmbientColour = 0,
