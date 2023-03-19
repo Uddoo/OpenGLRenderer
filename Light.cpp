@@ -18,8 +18,8 @@ Light::Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLflo
 	diffuseIntensity = dIntensity; // 漫反射强度
 }
 
-void Light::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation,
-	GLfloat diffuseIntensityLocation, GLfloat directionLocation)
+void Light::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
+	GLuint diffuseIntensityLocation, GLuint directionLocation)
 {
 	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // 设置环境光颜色
 	glUniform1f(ambientIntensityLocation, ambientIntensity); // 设置环境光强度

@@ -27,6 +27,10 @@ public:
 	GLuint GetDiffuseIntensityLocation(); // 获取漫反射强度位置
 	GLuint GetDirectionLocation(); // 获取漫反射方向位置
 
+	GLuint GetSpecularIntensityLocation(); // 获取镜面光强度位置
+	GLuint GetShininessLocation(); // 获取高光指数位置
+	GLuint GetEyePositionLocation(); // 获取眼睛位置
+
 	void UseShader(); // 使用着色器
 	void ClearShader(); // 清除着色器
 
@@ -35,8 +39,10 @@ public:
 private:
 	GLuint shaderID, uniformProjection, uniformModel; // shaderID = shader ID, uniformProjection = uniform projection, uniformModel = uniform model
 	GLuint uniformView; // uniformView = uniform view
+	GLuint uniformEyePosition; // uniformEyePosition = uniform eye position
 	GLuint uniformAmbientIntensity, uniformAmbientColour; // uniformAmbientIntensity = uniform ambient intensity, uniformAmbientColour = uniform ambient colour
 	GLuint uniformDiffuseIntensity, uniformDirection; // uniformDiffuseIntensity = uniform diffuse intensity, uniformDirection = uniform direction
+	GLuint uniformSpecularIntensity, uniformShininess; // uniformSpecularIntensity = uniform specular intensity, uniformShininess = uniform shininess
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);

@@ -79,6 +79,21 @@ GLuint Shader::GetDirectionLocation()
 	return uniformDirection;
 }
 
+GLuint Shader::GetSpecularIntensityLocation()
+{
+	return uniformSpecularIntensity;
+}
+
+GLuint Shader::GetShininessLocation()
+{
+	return uniformShininess;
+}
+
+GLuint Shader::GetEyePositionLocation()
+{
+	return uniformEyePosition;
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(shaderID); // 使用着色器
@@ -145,6 +160,10 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction"); // 获取 uniform 变量 directionalLight.direction 的位置
 	uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity"); // 获取 uniform 变量 directionalLight.diffuseIntensity 的位置
 	// 上面这一行原来写成了 == ， 导致没有漫反射光效果
+
+	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity"); // 获取 uniform 变量 material.specularIntensity 的位置
+	uniformShininess = glGetUniformLocation(shaderID, "material.shininess"); // 获取 uniform 变量 material.shininess 的位置
+	uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition"); // 获取 uniform 变量 eyePosition 的位置
 }
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)

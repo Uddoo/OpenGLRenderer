@@ -1,7 +1,6 @@
 ﻿#define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
-#include <stdlib.h>
 #include <vector>
 
 #include <GL/glew.h>
@@ -17,6 +16,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Light.h"
+#include "Material.h"
 
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
@@ -26,6 +26,9 @@ Camera camera; // 相机
 
 Texture brickTexture;
 Texture dirtTexture;
+
+Material shinyMaterial; // 高光材质
+Material dullMaterial; // 低光材质
 
 Light mainLight; // 光源
 
@@ -42,7 +45,7 @@ static const char* vShader = "Shaders/shader.vert";
 // Fragment Shader
 static const char* fShader = "Shaders/shader.frag";
 
-void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
+void CalcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
 	for (size_t i = 0; i < indiceCount; i += 3)
@@ -84,13 +87,13 @@ void CreateObjects()
 	// 顶点数组
 	GLfloat vertices[] = {
 		//  x      y     z      u     v      nx    ny    nz
-		-1.0f, -1.0f, 0.0f,  0.0f, 0.0f,   0.0f, 0.0f, 0.0f,
+		-1.0f, -1.0f, -0.6f,  0.0f, 0.0f,   0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 1.0f,   0.5f, 0.0f,   0.0f, 0.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,   1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, -0.6f,   1.0f, 0.0f,   0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f,    0.5f, 1.0f,   0.0f, 0.0f, 0.0f
 	};
 
-	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
+	CalcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
 	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
@@ -110,7 +113,7 @@ void CreateShaders()
 
 int main()
 {
-	mainWindow = Window(800, 600);
+	mainWindow = Window(1920, 1080);
 	mainWindow.Initialise();
 
 	CreateObjects(); // 创建三角形
@@ -123,12 +126,16 @@ int main()
 	dirtTexture = Texture("Textures/dirt.png");
 	dirtTexture.LoadTexture();
 
-	mainLight = Light(1.0f, 1.0f, 1.0f, 0.5f, /*环境光光源*/
-		2.0f, -1.0f, 2.0f, 1.0f); // 漫反射光源
+	shinyMaterial = Material(1.0f, 32);
+	dullMaterial = Material(0.3f, 4);
 
-	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0,
+	mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f, /*环境光光源*/
+		0.0f, -1.0f, -2.0f, 0.5f); // 漫反射光源
+
+	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformAmbientIntensity = 0, uniformAmbientColour = 0,
-		uniformDirection = 0, uniformDiffuseIntensity = 0;
+		uniformDirection = 0, uniformDiffuseIntensity = 0,
+		uniformSpecularIntensity = 0, uniformShininess = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.GetBufferWidth() / (GLfloat)mainWindow.GetBufferHeight(), 0.1f, 100.0f); // 创建投影矩阵
 
 	// 循环，直到窗口关闭
@@ -156,26 +163,33 @@ int main()
 		uniformAmbientIntensity = shaderList[0]->GetAmbientIntensityLocation();
 		uniformDirection = shaderList[0]->GetDirectionLocation();
 		uniformDiffuseIntensity = shaderList[0]->GetDiffuseIntensityLocation();
+		uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
+		uniformShininess = shaderList[0]->GetShininessLocation();
+		uniformEyePosition = shaderList[0]->GetEyePositionLocation();
 
 		mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,
 			uniformDiffuseIntensity, uniformDirection); // 使用光源
+
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
+		glUniform3f(uniformEyePosition, camera.GetCameraPosition().x, camera.GetCameraPosition().y, camera.GetCameraPosition().z); // 设置 uniform 变量 eyePosition
 
 		glm::mat4 model(1.0f); // 创建模型矩阵
 
 		//model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 1.0f)); // 旋转
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f)); // 平移
-		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
+		//model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
-		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
 		brickTexture.UseTexture();
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用高光材质
 		meshList[0]->RenderMesh();
 
 		model = glm::mat4(1.0f); // 重置模型矩阵
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.0f)); // 平移
-		model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.0f)); // 平移
+		//model = glm::scale(model, glm::vec3(0.4, 0.4, 1.0f)); // 缩放
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
 		dirtTexture.UseTexture();
+		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用低光材质
 		meshList[1]->RenderMesh();
 
 		glUseProgram(0); // 不使用着色器
