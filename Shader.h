@@ -7,6 +7,8 @@
 
 #include <GL/glew.h>
 
+#include "CommonValues.h"
+
 #include "DirectionalLight.h"
 #include "PointLight.h"
 
@@ -36,6 +38,8 @@ public:
 
 	void SetDirectionalLight(DirectionalLight* dLight); // 设置平行光
 
+	void SetPointLights(PointLight* pLight, unsigned int lightCount); // 设置点光源
+
 	void UseShader(); // 使用着色器
 	void ClearShader(); // 清除着色器
 
@@ -58,6 +62,20 @@ private:
 
 		GLuint uniformDirection;
 	}uniformDirectionalLight;
+
+	GLuint uniformPointLightCount;
+
+	struct
+	{
+		GLuint uniformColour;
+		GLuint uniformAmbientIntensity;
+		GLuint uniformDiffuseIntensity;
+
+		GLuint uniformPosition;
+		GLuint uniformConstant;
+		GLuint uniformLinear;
+		GLuint uniformExponent;
+	}uniformPointLight[MAX_POINT_LIGHTS];
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);

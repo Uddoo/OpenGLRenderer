@@ -5,6 +5,8 @@ Shader::Shader()
 	shaderID = 0;
 	uniformModel = 0;
 	uniformProjection = 0;
+
+	pointLightCount = 0;
 }
 
 void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
@@ -100,6 +102,23 @@ void Shader::SetDirectionalLight(DirectionalLight* dLight)
 		uniformDirectionalLight.uniformDiffuseIntensity, uniformDirectionalLight.uniformDirection);
 }
 
+void Shader::SetPointLights(PointLight* pLight, unsigned lightCount)
+{
+	if (lightCount > MAX_POINT_LIGHTS)
+	{
+		lightCount = MAX_POINT_LIGHTS;
+	}
+
+	glUniform1i(uniformPointLightCount, lightCount);
+
+	for (size_t i = 0; i < lightCount; i++)
+	{
+		pLight[i].UseLight(uniformPointLight[i].uniformAmbientIntensity, uniformPointLight[i].uniformColour,
+			uniformPointLight[i].uniformDiffuseIntensity, uniformPointLight[i].uniformPosition,
+			uniformPointLight[i].uniformConstant, uniformPointLight[i].uniformLinear, uniformPointLight[i].uniformExponent);
+	}
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(shaderID); // 使用着色器
@@ -160,16 +179,44 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformProjection = glGetUniformLocation(shaderID, "projection"); // 获取 uniform 变量 projection 的位置
 	uniformView = glGetUniformLocation(shaderID, "view"); // 获取 uniform 变量 view 的位置
 
-	uniformDirectionalLight.uniformColour = glGetUniformLocation(shaderID, "directionalLight.colour"); // 获取 uniform 变量 directionalLight.colour 的位置
-	uniformDirectionalLight.uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity"); // 获取 uniform 变量 directionalLight.ambientIntensity 的位置
+	uniformDirectionalLight.uniformColour = glGetUniformLocation(shaderID, "directionalLight.base.colour"); // 获取 uniform 变量 directionalLight.colour 的位置
+	uniformDirectionalLight.uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.base.ambientIntensity"); // 获取 uniform 变量 directionalLight.ambientIntensity 的位置
 
 	uniformDirectionalLight.uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction"); // 获取 uniform 变量 directionalLight.direction 的位置
-	uniformDirectionalLight.uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity"); // 获取 uniform 变量 directionalLight.diffuseIntensity 的位置
+	uniformDirectionalLight.uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.base.diffuseIntensity"); // 获取 uniform 变量 directionalLight.diffuseIntensity 的位置
 	// 上面这一行原来写成了 == ， 导致没有漫反射光效果
 
 	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity"); // 获取 uniform 变量 material.specularIntensity 的位置
 	uniformShininess = glGetUniformLocation(shaderID, "material.shininess"); // 获取 uniform 变量 material.shininess 的位置
 	uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition"); // 获取 uniform 变量 eyePosition 的位置
+
+	uniformPointLightCount = glGetUniformLocation(shaderID, "pointLightCount"); // 获取 uniform 变量 pointLightCount 的位置
+
+	for (size_t i = 0; i < MAX_POINT_LIGHTS; i++)
+	{
+		char locBuff[100] = { '\0' }; // 用于存储 uniform 变量的位置
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.colour", i); // 生成 uniformColour 变量的位置
+		uniformPointLight[i].uniformColour = glGetUniformLocation(shaderID, locBuff); // 获取 uniform 变量 pointLights[i].base.colour 的位置
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.ambientIntensity", i);
+		uniformPointLight[i].uniformAmbientIntensity = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.diffuseIntensity", i);
+		uniformPointLight[i].uniformDiffuseIntensity = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].position", i);
+		uniformPointLight[i].uniformPosition = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].constant", i);
+		uniformPointLight[i].uniformConstant = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].linear", i);
+		uniformPointLight[i].uniformLinear = glGetUniformLocation(shaderID, locBuff);
+
+		snprintf(locBuff, sizeof(locBuff), "pointLights[%d].exponent", i);
+		uniformPointLight[i].uniformExponent = glGetUniformLocation(shaderID, locBuff);
+	}
 }
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)

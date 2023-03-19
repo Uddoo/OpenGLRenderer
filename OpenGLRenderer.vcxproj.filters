@@ -80,6 +80,9 @@
     <ClInclude Include="PointLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CommonValues.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\shader.vert">

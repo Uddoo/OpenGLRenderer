@@ -10,12 +10,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "CommonValues.h"
+
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
 #include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Material.h"
 
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
@@ -31,6 +34,7 @@ Material shinyMaterial; // 高光材质
 Material dullMaterial; // 低光材质
 
 DirectionalLight mainLight; // 光源
+PointLight pointLights[MAX_POINT_LIGHTS]; // 点光源
 
 GLfloat deltaTime = 0.0f; // 帧间隔时间
 GLfloat lastTime = 0.0f;
@@ -133,9 +137,24 @@ int main()
 		0.2f, /*环境光光源*/ 0.5f,
 		0.0f, -1.0f, -2.0f); // 漫反射光源
 
+	unsigned int pointLightCount = 0;
+	pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
+		0.1f, 1.0f,
+		-4.0f, 0.0f, 0.0f,
+		0.3f, 0.2f, 0.1f);
+	pointLightCount++;
+	pointLights[1] = PointLight(1.0f, 0.0f, 0.0f,
+		0.1f, 1.0f,
+		4.0f, 0.0f, 0.0f,
+		0.3f, 0.2f, 0.1f);
+	pointLightCount++;
+	pointLights[2] = PointLight(0.0f, 0.0f, 1.0f,
+		0.1f, 1.0f,
+		0.0f, 0.0f, 4.0f,
+		0.3f, 0.2f, 0.1f);
+	pointLightCount++;
+
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformAmbientIntensity = 0, uniformAmbientColour = 0,
-		uniformDirection = 0, uniformDiffuseIntensity = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.GetBufferWidth() / (GLfloat)mainWindow.GetBufferHeight(), 0.1f, 100.0f); // 创建投影矩阵
 
@@ -160,18 +179,12 @@ int main()
 		uniformModel = shaderList[0]->GetModelLocation();
 		uniformProjection = shaderList[0]->GetProjectionLocation();
 		uniformView = shaderList[0]->GetViewLocation();
-		uniformAmbientColour = shaderList[0]->GetAmbientColourLocation();
-		uniformAmbientIntensity = shaderList[0]->GetAmbientIntensityLocation();
-		uniformDirection = shaderList[0]->GetDirectionLocation();
-		uniformDiffuseIntensity = shaderList[0]->GetDiffuseIntensityLocation();
 		uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0]->GetShininessLocation();
 		uniformEyePosition = shaderList[0]->GetEyePositionLocation();
 
 		shaderList[0]->SetDirectionalLight(&mainLight);
-
-		//mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,
-		//	uniformDiffuseIntensity, uniformDirection); // 使用光源
+		shaderList[0]->SetPointLights(pointLights, pointLightCount);
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
