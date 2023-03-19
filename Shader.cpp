@@ -61,22 +61,22 @@ GLuint Shader::GetViewLocation()
 
 GLuint Shader::GetAmbientIntensityLocation()
 {
-	return uniformAmbientIntensity;
+	return uniformDirectionalLight.uniformAmbientIntensity;
 }
 
 GLuint Shader::GetAmbientColourLocation()
 {
-	return uniformAmbientColour;
+	return uniformDirectionalLight.uniformColour;
 }
 
 GLuint Shader::GetDiffuseIntensityLocation()
 {
-	return uniformDiffuseIntensity;
+	return uniformDirectionalLight.uniformDiffuseIntensity;
 }
 
 GLuint Shader::GetDirectionLocation()
 {
-	return uniformDirection;
+	return uniformDirectionalLight.uniformDirection;
 }
 
 GLuint Shader::GetSpecularIntensityLocation()
@@ -154,11 +154,11 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformProjection = glGetUniformLocation(shaderID, "projection"); // 获取 uniform 变量 projection 的位置
 	uniformView = glGetUniformLocation(shaderID, "view"); // 获取 uniform 变量 view 的位置
 
-	uniformAmbientColour = glGetUniformLocation(shaderID, "directionalLight.colour"); // 获取 uniform 变量 directionalLight.colour 的位置
-	uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity"); // 获取 uniform 变量 directionalLight.ambientIntensity 的位置
+	uniformDirectionalLight.uniformColour = glGetUniformLocation(shaderID, "directionalLight.colour"); // 获取 uniform 变量 directionalLight.colour 的位置
+	uniformDirectionalLight.uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity"); // 获取 uniform 变量 directionalLight.ambientIntensity 的位置
 
-	uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction"); // 获取 uniform 变量 directionalLight.direction 的位置
-	uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity"); // 获取 uniform 变量 directionalLight.diffuseIntensity 的位置
+	uniformDirectionalLight.uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction"); // 获取 uniform 变量 directionalLight.direction 的位置
+	uniformDirectionalLight.uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity"); // 获取 uniform 变量 directionalLight.diffuseIntensity 的位置
 	// 上面这一行原来写成了 == ， 导致没有漫反射光效果
 
 	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity"); // 获取 uniform 变量 material.specularIntensity 的位置
