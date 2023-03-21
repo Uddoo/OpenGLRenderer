@@ -48,6 +48,9 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -81,6 +84,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CommonValues.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

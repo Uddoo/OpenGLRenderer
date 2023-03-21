@@ -17,13 +17,11 @@ public:
 
 	~PointLight();
 
-private:
+protected:
 	glm::vec3 position; // 光源位置
 
 	// exponent * x ^ 2 + linear  * x + constant
 	GLfloat constant; // 常数
 	GLfloat linear; // 线性
 	GLfloat exponent; // 指数
-
-
 };

@@ -17,9 +17,11 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Material.h"
+
 #include "DirectionalLight.h"
 #include "PointLight.h"
-#include "Material.h"
+#include "SpotLight.h"
 
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
@@ -36,6 +38,7 @@ Material dullMaterial; // 低光材质
 
 DirectionalLight mainLight; // 光源
 PointLight pointLights[MAX_POINT_LIGHTS]; // 点光源
+SpotLight spotLights[MAX_SPOT_LIGHTS]; // 聚光灯
 
 GLfloat deltaTime = 0.0f; // 帧间隔时间
 GLfloat lastTime = 0.0f;
@@ -153,17 +156,18 @@ int main()
 	dullMaterial = Material(0.3f, 4);
 
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.2f, /*环境光光源*/ 0.5f,
+		0.2f, /*环境光光源*/ 0.1f,
 		0.0f, -1.0f, -2.0f); // 漫反射光源
 
+	// 创建点光源
 	unsigned int pointLightCount = 0;
 	pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
-		0.1f, 1.0f,
+		0.1f, 0.1f,
 		-4.0f, 0.0f, 0.0f,
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
 	pointLights[1] = PointLight(1.0f, 0.0f, 0.0f,
-		0.1f, 1.0f,
+		0.1f, 0.1f,
 		4.0f, 0.0f, 0.0f,
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
@@ -172,6 +176,24 @@ int main()
 		0.0f, 0.0f, 4.0f,
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
+
+	// 创建聚光灯
+	unsigned int spotLightCount = 0;
+	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+		0.0f, 1.0f,
+		-4.0f, 0.0f, -2.0f,
+		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		30.f);
+	spotLightCount++;
+	spotLights[1] = SpotLight(1.0f, 0.0f, 1.0f,
+		0.1f, 1.0f,
+		4.0f, 1.5f, 0.0f,
+		0.0f, -1.0f, -1.0f,
+		0.2f, 0.1f, 0.1f,
+		20.f);
+	spotLightCount++;
+
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
@@ -202,8 +224,14 @@ int main()
 		uniformShininess = shaderList[0]->GetShininessLocation();
 		uniformEyePosition = shaderList[0]->GetEyePositionLocation();
 
+		// 设置手电筒
+		glm::vec3 lowerLight = camera.GetCameraPosition();
+		lowerLight.y -= 0.3f;
+		spotLights[0].SetFlash(lowerLight, camera.GetCameraDirection());
+
 		shaderList[0]->SetDirectionalLight(&mainLight);
 		shaderList[0]->SetPointLights(pointLights, pointLightCount);
+		shaderList[0]->SetSpotLights(spotLights, spotLightCount);
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection)); // 设置 uniform 变量 projection
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix())); // 设置 uniform 变量 view
