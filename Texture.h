@@ -10,7 +10,9 @@ public:
 	Texture();
 	Texture(const char* fileLoc);
 
-	void LoadTexture(); // 加载纹理
+	bool LoadTexture(); // 加载没有Alpha通道的纹理，返回是否加载成功，不成功则加载我们规定的默认纹理
+	bool LoadTextureA(); // 加载有Alpha通道的纹理
+
 	void UseTexture(); // 使用纹理
 	void ClearTexture(); // 清除纹理
 

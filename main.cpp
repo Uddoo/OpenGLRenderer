@@ -23,6 +23,8 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
+#include "assimp/Importer.hpp"
+
 const float toRadians = 3.14159265f / 180.0f; // 角度转弧度
 
 Window mainWindow; // 主窗口
@@ -146,11 +148,11 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 1.0f);
 
 	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTexture(); // 加载纹理
+	brickTexture.LoadTextureA(); // 加载纹理
 	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.LoadTexture();
+	dirtTexture.LoadTextureA();
 	plainTexture = Texture("Textures/plain.png");
-	plainTexture.LoadTexture();
+	plainTexture.LoadTextureA();
 
 	shinyMaterial = Material(1.0f, 256);
 	dullMaterial = Material(0.3f, 4);
