@@ -46,9 +46,10 @@ bool Texture::LoadTexture()
 	return true;
 }
 
+// TODO: perf texture with alpha channel load function still has some problems, like nanosuit model
 bool Texture::LoadTextureA()
 {
-	unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0); // 使用stb_image加载纹理
+	unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 4); // 使用stb_image加载纹理
 	if (!texData)
 	{
 		printf("Failed to find: %s\n", fileLocation);

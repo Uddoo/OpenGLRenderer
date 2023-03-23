@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Material.h"
+#include "Model.h"
 
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -37,6 +38,11 @@ Texture plainTexture;
 
 Material shinyMaterial; // 高光材质
 Material dullMaterial; // 低光材质
+
+Model spaceship;
+Model nanosuit;
+Model xwing;
+Model uh60;
 
 DirectionalLight mainLight; // 光源
 PointLight pointLights[MAX_POINT_LIGHTS]; // 点光源
@@ -157,22 +163,37 @@ int main()
 	shinyMaterial = Material(1.0f, 256);
 	dullMaterial = Material(0.3f, 4);
 
+	spaceship = Model();
+	spaceship.LoadModel("Models/Intergalactic_Spaceship-(Wavefront).obj");
+
+	nanosuit = Model();
+	nanosuit.LoadModel("Models/nanosuit.obj");
+
+	xwing = Model();
+	xwing.LoadModel("Models/x-wing.obj");
+
+	uh60 = Model();
+	uh60.LoadModel("Models/uh60.obj");
+
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.2f, /*环境光光源*/ 0.1f,
+		0.3f, /*环境光光源*/ 0.6f,
 		0.0f, -1.0f, -2.0f); // 漫反射光源
 
 	// 创建点光源
 	unsigned int pointLightCount = 0;
+	// 绿色点光源
 	pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
 		0.1f, 0.1f,
 		-4.0f, 0.0f, 0.0f,
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
+	// 红色点光源
 	pointLights[1] = PointLight(1.0f, 0.0f, 0.0f,
 		0.1f, 0.1f,
 		4.0f, 0.0f, 0.0f,
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
+	// 蓝色点光源
 	pointLights[2] = PointLight(0.0f, 0.0f, 1.0f,
 		0.1f, 1.0f,
 		0.0f, 0.0f, 4.0f,
@@ -264,6 +285,40 @@ int main()
 		plainTexture.UseTexture();
 		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用低光材质
 		meshList[2]->RenderMesh();
+
+		// 渲染spaceship
+		model = glm::mat4(1.0f); // 重置模型矩阵
+		model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f)); // 平移
+		model = glm::scale(model, glm::vec3(0.4, 0.4, 0.4)); // 缩放
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用低光材质
+		spaceship.RenderModel();
+
+		// 渲染nanosuit
+		model = glm::mat4(1.0f); // 重置模型矩阵
+		model = glm::translate(model, glm::vec3(-4.0f, 0.0f, 0.0f)); // 平移
+		model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2)); // 缩放
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用低光材质
+		nanosuit.RenderModel();
+
+		// 渲染xwing
+		model = glm::mat4(1.0f); // 重置模型矩阵
+		model = glm::translate(model, glm::vec3(-4.0f, 0.0f, 2.0f)); // 平移
+		model = glm::scale(model, glm::vec3(0.005, 0.005, 0.005)); // 缩放
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用低光材质
+		xwing.RenderModel();
+
+		// 渲染uh60
+		model = glm::mat4(1.0f); // 重置模型矩阵
+		model = glm::translate(model, glm::vec3(-4.0f, 0.0f, -4.0f)); // 平移
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f)); // 旋转
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f)); // 旋转
+		model = glm::scale(model, glm::vec3(0.4, 0.4, 0.4)); // 缩放
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); // 设置 uniform 变量 model
+		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess); // 使用低光材质
+		uh60.RenderModel();
 
 		glUseProgram(0); // 不使用着色器
 
