@@ -12,30 +12,31 @@ class Camera
 public:
 	Camera();
 
-	Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed);
+	Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed,
+	       GLfloat startTurnSpeed);
 
-	void KeyControl(bool* keys, GLfloat deltaTime);
-	void MouseControl(GLfloat xChange, GLfloat yChange);
+	void keyControl(bool* keys, GLfloat deltaTime);
+	void mouseControl(GLfloat xChange, GLfloat yChange);
 
-	glm::vec3 GetCameraPosition() { return position; }
-	glm::vec3 GetCameraDirection() { return glm::normalize(front); }
+	glm::vec3 getCameraPosition() { return position; }
+	glm::vec3 getCameraDirection() { return normalize(front); }
 
-	glm::mat4 CalculateViewMatrix(); // ¼ÆËã¹Û²ì¾ØÕó
+	glm::mat4 calculateViewMatrix(); // è®¡ç®—è§‚å¯ŸçŸ©é˜µ
 
 	~Camera();
 
 private:
-	glm::vec3 position; // Ïà»úÎ»ÖÃ
-	glm::vec3 front; // Ïà»úÇ°ÏòÁ¿
-	glm::vec3 up; // Ïà»úÉÏÏòÁ¿
-	glm::vec3 right; // Ïà»úÓÒÏòÁ¿
-	glm::vec3 worldUp; // ÊÀ½çÉÏÏòÁ¿
+	glm::vec3 position; // ç›¸æœºä½ç½®
+	glm::vec3 front; // ç›¸æœºå‰å‘é‡
+	glm::vec3 up; // ç›¸æœºä¸Šå‘é‡
+	glm::vec3 right; // ç›¸æœºå³å‘é‡
+	glm::vec3 worldUp; // ä¸–ç•Œä¸Šå‘é‡
 
-	GLfloat yaw; // Æ«º½½Ç£¨×óÓÒ×ª¶¯£©
-	GLfloat pitch; // ¸©Ñö½Ç£¨ÉÏÏÂ×ª¶¯£©
+	GLfloat yaw; // åèˆªè§’ï¼ˆå·¦å³è½¬åŠ¨ï¼‰
+	GLfloat pitch; // ä¿¯ä»°è§’ï¼ˆä¸Šä¸‹è½¬åŠ¨ï¼‰
 
-	GLfloat moveSpeed; // ÒÆ¶¯ËÙ¶È
-	GLfloat turnSpeed; // ×ª¶¯ËÙ¶È
+	GLfloat moveSpeed; // ç§»åŠ¨é€Ÿåº¦
+	GLfloat turnSpeed; // è½¬åŠ¨é€Ÿåº¦
 
 	void Update();
 };

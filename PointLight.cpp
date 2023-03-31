@@ -3,14 +3,15 @@
 PointLight::PointLight() : Light()
 {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
-	constant = 1.0f; // ÒòÎª exponent * x ^ 2 + linear  * x + constant ´¦ÓÚ·ÖÄ¸£¬²»ÄÜÎª0£¬constant²»ÊÜ¾àÀëÓ°Ïì
+	constant = 1.0f; // å› ä¸º exponent * x ^ 2 + linear  * x + constant å¤„äºåˆ†æ¯ï¼Œä¸èƒ½ä¸º0ï¼Œconstantä¸å—è·ç¦»å½±å“
 	linear = 0.0f;
 	exponent = 0.0f;
 }
 
 PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLfloat dIntensity,
-	GLfloat xPos, GLfloat yPos, GLfloat zPos,
-	GLfloat con, GLfloat lin, GLfloat exp) : Light(red, green, blue, aIntensity, dIntensity)
+                       GLfloat xPos, GLfloat yPos, GLfloat zPos,
+                       GLfloat con, GLfloat lin, GLfloat exp)
+	: Light(1024, 1024, red, green, blue, aIntensity, dIntensity)
 {
 	position = glm::vec3(xPos, yPos, zPos);
 	constant = con;
@@ -22,15 +23,15 @@ void PointLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourL
 	GLuint diffuseIntensityLocation, GLuint positionLocation,
 	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation)
 {
-	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // ÉèÖÃ»·¾³¹âÑÕÉ«
-	glUniform1f(ambientIntensityLocation, ambientIntensity); // ÉèÖÃ»·¾³¹âÇ¿¶È
+	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // è®¾ç½®ç¯å¢ƒå…‰é¢œè‰²
+	glUniform1f(ambientIntensityLocation, ambientIntensity); // è®¾ç½®ç¯å¢ƒå…‰å¼ºåº¦
 
-	glUniform1f(diffuseIntensityLocation, diffuseIntensity); // ÉèÖÃÂş·´ÉäÇ¿¶È
+	glUniform1f(diffuseIntensityLocation, diffuseIntensity); // è®¾ç½®æ¼«åå°„å¼ºåº¦
 
-	glUniform3f(positionLocation, position.x, position.y, position.z); // ÉèÖÃµã¹âÔ´Î»ÖÃ
-	glUniform1f(constantLocation, constant); // ÉèÖÃµã¹âÔ´³£Êı
-	glUniform1f(linearLocation, linear); // ÉèÖÃµã¹âÔ´ÏßĞÔ
-	glUniform1f(exponentLocation, exponent); // ÉèÖÃµã¹âÔ´Ö¸Êı
+	glUniform3f(positionLocation, position.x, position.y, position.z); // è®¾ç½®ç‚¹å…‰æºä½ç½®
+	glUniform1f(constantLocation, constant); // è®¾ç½®ç‚¹å…‰æºå¸¸æ•°
+	glUniform1f(linearLocation, linear); // è®¾ç½®ç‚¹å…‰æºçº¿æ€§
+	glUniform1f(exponentLocation, exponent); // è®¾ç½®ç‚¹å…‰æºæŒ‡æ•°
 }
 
 PointLight::~PointLight()

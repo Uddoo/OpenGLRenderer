@@ -2,18 +2,22 @@
 
 Light::Light()
 {
-	colour = glm::vec3(1.0f, 1.0f, 1.0f); // »·¾³¹âÄ¬ÈÏ°×É«
-	ambientIntensity = 1.0f; // »·¾³¹âÄ¬ÈÏÇ¿¶ÈÎª1
+	colour = glm::vec3(1.0f, 1.0f, 1.0f); // ç¯å¢ƒå…‰é»˜è®¤ç™½è‰²
+	ambientIntensity = 1.0f; // ç¯å¢ƒå…‰é»˜è®¤å¼ºåº¦ä¸º1
 
-	diffuseIntensity = 0.0f; // Âş·´ÉäÄ¬ÈÏÇ¿¶ÈÎª0
+	diffuseIntensity = 0.0f; // æ¼«åå°„é»˜è®¤å¼ºåº¦ä¸º0
 }
 
-Light::Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLfloat dIntensity)
+Light::Light(GLuint shadowWidth, GLuint shadowHeight, GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity,
+             GLfloat dIntensity)
 {
+	shadowMap = new ShadowMap();
+	shadowMap->Init(shadowWidth, shadowHeight);
+
 	colour = glm::vec3(red, green, blue);
 	ambientIntensity = aIntensity;
 
-	diffuseIntensity = dIntensity; // Âş·´ÉäÇ¿¶È
+	diffuseIntensity = dIntensity; // æ¼«åå°„å¼ºåº¦
 }
 
 Light::~Light()

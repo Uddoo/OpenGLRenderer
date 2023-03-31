@@ -7,16 +7,18 @@ class DirectionalLight :
 public:
 	DirectionalLight();
 
-	DirectionalLight(GLfloat red, GLfloat green, GLfloat blue,
-		GLfloat aIntensity, GLfloat dIntensity,
-		GLfloat xDir, GLfloat yDir, GLfloat zDir);
+	DirectionalLight(GLuint shadowWidth, GLuint shadowHeight,
+	                 GLfloat red, GLfloat green, GLfloat blue,
+	                 GLfloat aIntensity, GLfloat dIntensity,
+	                 GLfloat xDir, GLfloat yDir, GLfloat zDir);
 
-	void UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
-		GLuint diffuseIntensityLocation, GLuint directionLocation); // 使用光源
+	void UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation,
+	              GLfloat diffuseIntensityLocation, GLfloat directionLocation); // 浣跨敤鍏夋簮
+
+	glm::mat4 CalculateLightTransform(); // 璁＄畻鍏夋簮鍙樻崲鐭╅樀
 
 	~DirectionalLight();
 
 private:
-	glm::vec3 direction; // 光源方向
+	glm::vec3 direction; // 鍏夋簮鏂瑰悜
 };
-

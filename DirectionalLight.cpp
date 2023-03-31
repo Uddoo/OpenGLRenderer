@@ -2,24 +2,33 @@
 
 DirectionalLight::DirectionalLight() : Light()
 {
-	direction = glm::vec3(0.0f, -1.0f, 0.0f); // Âş·´Éä·½Ïò
+	direction = glm::vec3(0.0f, -1.0f, 0.0f); // æ¼«åå°„æ–¹å‘
+	lightProj = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 20.0f); // è®¾ç½®å…‰æºæŠ•å½±çŸ©é˜µ
 }
 
-DirectionalLight::DirectionalLight(GLfloat red, GLfloat green, GLfloat blue,
-	GLfloat aIntensity, GLfloat dIntensity,
-	GLfloat xDir, GLfloat yDir, GLfloat zDir) : Light(red, green, blue, aIntensity, dIntensity)
+DirectionalLight::DirectionalLight(GLuint shadowWidth, GLuint shadowHeight,
+                                   GLfloat red, GLfloat green, GLfloat blue,
+                                   GLfloat aIntensity, GLfloat dIntensity,
+                                   GLfloat xDir, GLfloat yDir, GLfloat zDir)
+	: Light(shadowWidth, shadowHeight, red, green, blue, aIntensity, dIntensity)
 {
-	direction = glm::vec3(xDir, yDir, zDir); // Âş·´Éä·½Ïò
+	direction = glm::vec3(xDir, yDir, zDir); // æ¼«åå°„æ–¹å‘
+	lightProj = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.0f); // è®¾ç½®å…‰æºæŠ•å½±çŸ©é˜µ
 }
 
-void DirectionalLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
-	GLuint diffuseIntensityLocation, GLuint directionLocation)
+void DirectionalLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation,
+                                GLfloat diffuseIntensityLocation, GLfloat directionLocation)
 {
-	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // ÉèÖÃ»·¾³¹âÑÕÉ«
-	glUniform1f(ambientIntensityLocation, ambientIntensity); // ÉèÖÃ»·¾³¹âÇ¿¶È
+	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // è®¾ç½®ç¯å¢ƒå…‰é¢œè‰²
+	glUniform1f(ambientIntensityLocation, ambientIntensity); // è®¾ç½®ç¯å¢ƒå…‰å¼ºåº¦
 
-	glUniform3f(directionLocation, direction.x, direction.y, direction.z); // ÉèÖÃÂş·´Éä·½Ïò
-	glUniform1f(diffuseIntensityLocation, diffuseIntensity); // ÉèÖÃÂş·´ÉäÇ¿¶È
+	glUniform3f(directionLocation, direction.x, direction.y, direction.z); // è®¾ç½®æ¼«åå°„æ–¹å‘
+	glUniform1f(diffuseIntensityLocation, diffuseIntensity); // è®¾ç½®æ¼«åå°„å¼ºåº¦
+}
+
+glm::mat4 DirectionalLight::CalculateLightTransform()
+{
+	return lightProj * lookAt(-direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // è®¡ç®—å…‰æºå˜æ¢çŸ©é˜µ
 }
 
 DirectionalLight::~DirectionalLight()

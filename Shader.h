@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <stdio.h>
 #include <string>
@@ -6,6 +6,9 @@
 #include <fstream>
 
 #include <GL/glew.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "CommonValues.h"
 
@@ -18,45 +21,52 @@ class Shader
 public:
 	Shader();
 
-	void CreateFromString(const char* vertexCode, const char* fragmentCode); // ´Ó×Ö·û´®´´½¨×ÅÉ«Æ÷
-	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation); // ´ÓÎÄ¼ş´´½¨×ÅÉ«Æ÷
+	void CreateFromString(const char* vertexCode, const char* fragmentCode); // ä»å­—ç¬¦ä¸²åˆ›å»ºç€è‰²å™¨
+	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation); // ä»æ–‡ä»¶åˆ›å»ºç€è‰²å™¨
 
-	std::string ReadFile(const char* fileLocation); // ¶ÁÈ¡ÎÄ¼ş
+	std::string ReadFile(const char* fileLocation); // è¯»å–æ–‡ä»¶
 
-	GLuint GetProjectionLocation(); // »ñÈ¡Í¶Ó°Î»ÖÃ
-	GLuint GetModelLocation(); // »ñÈ¡Ä£ĞÍÎ»ÖÃ
-	GLuint GetViewLocation(); // »ñÈ¡ÊÓÍ¼Î»ÖÃ
+	GLuint GetProjectionLocation(); // è·å–æŠ•å½±ä½ç½®
+	GLuint GetModelLocation(); // è·å–æ¨¡å‹ä½ç½®
+	GLuint GetViewLocation(); // è·å–è§†å›¾ä½ç½®
 
-	GLuint GetAmbientIntensityLocation(); // »ñÈ¡»·¾³¹âÇ¿¶ÈÎ»ÖÃ
-	GLuint GetAmbientColourLocation(); // »ñÈ¡»·¾³¹âÑÕÉ«Î»ÖÃ
+	GLuint GetAmbientIntensityLocation(); // è·å–ç¯å¢ƒå…‰å¼ºåº¦ä½ç½®
+	GLuint GetAmbientColourLocation(); // è·å–ç¯å¢ƒå…‰é¢œè‰²ä½ç½®
 
-	GLuint GetDiffuseIntensityLocation(); // »ñÈ¡Âş·´ÉäÇ¿¶ÈÎ»ÖÃ
-	GLuint GetDirectionLocation(); // »ñÈ¡Âş·´Éä·½ÏòÎ»ÖÃ
+	GLuint GetDiffuseIntensityLocation(); // è·å–æ¼«åå°„å¼ºåº¦ä½ç½®
+	GLuint GetDirectionLocation(); // è·å–æ¼«åå°„æ–¹å‘ä½ç½®
 
-	GLuint GetSpecularIntensityLocation(); // »ñÈ¡¾µÃæ¹âÇ¿¶ÈÎ»ÖÃ
-	GLuint GetShininessLocation(); // »ñÈ¡¸ß¹âÖ¸ÊıÎ»ÖÃ
-	GLuint GetEyePositionLocation(); // »ñÈ¡ÑÛ¾¦Î»ÖÃ
+	GLuint GetSpecularIntensityLocation(); // è·å–é•œé¢å…‰å¼ºåº¦ä½ç½®
+	GLuint GetShininessLocation(); // è·å–é«˜å…‰æŒ‡æ•°ä½ç½®
+	GLuint GetEyePositionLocation(); // è·å–çœ¼ç›ä½ç½®
 
-	void SetDirectionalLight(DirectionalLight* dLight); // ÉèÖÃÆ½ĞĞ¹â
+	void SetDirectionalLight(DirectionalLight* dLight); // è®¾ç½®å¹³è¡Œå…‰
+	void SetPointLights(PointLight* pLight, unsigned int lightCount); // è®¾ç½®ç‚¹å…‰æº
+	void SetSpotLights(SpotLight* sLight, unsigned int lightCount); // è®¾ç½®èšå…‰ç¯
 
-	void SetPointLights(PointLight* pLight, unsigned int lightCount); // ÉèÖÃµã¹âÔ´
+	void SetTexture(GLuint textureUnit); // è®¾ç½®çº¹ç†
+	void SetDirectionalShadowMap(GLuint textureUint); // è®¾ç½®å¹³è¡Œå…‰é˜´å½±è´´å›¾
+	void SetDirectionalLightTransform(glm::mat4* lTransform); // è®¾ç½®å¹³è¡Œå…‰å˜æ¢çŸ©é˜µ
 
-	void SetSpotLights(SpotLight* sLight, unsigned int lightCount); // ÉèÖÃ¾Û¹âµÆ
-
-	void UseShader(); // Ê¹ÓÃ×ÅÉ«Æ÷
-	void ClearShader(); // Çå³ı×ÅÉ«Æ÷
+	void UseShader(); // ä½¿ç”¨ç€è‰²å™¨
+	void ClearShader(); // æ¸…é™¤ç€è‰²å™¨
 
 	~Shader();
 
 private:
-	int pointLightCount; // µã¹âÔ´ÊıÁ¿
-	int spotLightCount; // ¾Û¹âµÆÊıÁ¿
+	int pointLightCount; // ç‚¹å…‰æºæ•°é‡
+	int spotLightCount; // èšå…‰ç¯æ•°é‡
 
 	GLuint shaderID, uniformProjection, uniformModel; // shaderID = shader ID, uniformProjection = uniform projection, uniformModel = uniform model
 	GLuint uniformView; // uniformView = uniform view
 	GLuint uniformEyePosition; // uniformEyePosition = uniform eye position
 
 	GLuint uniformSpecularIntensity, uniformShininess; // uniformSpecularIntensity = uniform specular intensity, uniformShininess = uniform shininess
+
+	GLuint uniformTexture; // uniformTexture = uniform texture
+
+	GLuint uniformDirectionalLightTransform, uniformDirectionalShadowMap;
+	// uniformDirectionalLightTransform = uniform directional light transform, uniformDirectionalShadowMap = uniform directional shadow map
 
 	struct
 	{

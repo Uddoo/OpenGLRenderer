@@ -7,7 +7,7 @@ Window::Window()
 
 	for (size_t i = 0; i < 1024; i++)
 	{
-		keys[i] = 0;
+		keys[i] = false;
 	}
 }
 
@@ -18,13 +18,13 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 
 	for (size_t i = 0; i < 1024; i++)
 	{
-		keys[i] = 0;
+		keys[i] = false;
 	}
 }
 
 int Window::Initialise()
 {
-	// ≥ı ºªØ GLFW
+	// ÂàùÂßãÂåñ GLFW
 	if (!glfwInit())
 	{
 		printf("GLFW initialisation failed");
@@ -32,7 +32,7 @@ int Window::Initialise()
 		return 1;
 	}
 
-	// …Ë÷√ GLFW ¥∞ø⁄ Ù–‘
+	// ËÆæÁΩÆ GLFW Á™óÂè£Â±ûÊÄß
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	// Core profile = No Backwards Compatibility
@@ -40,7 +40,7 @@ int Window::Initialise()
 	// Allow forward compatibility
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	mainWindow = glfwCreateWindow(width, height, "OpenGLRenderer", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "OpenGLRenderer", nullptr, nullptr);
 
 	if (!mainWindow)
 	{
@@ -49,18 +49,18 @@ int Window::Initialise()
 		return 1;
 	}
 
-	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight); // ªÒ»°ª∫≥Â¥Û–°
-	// ’‚¿Ô‘≠¿¥–¥≥…¡À glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferWidth); µº÷¬Œﬁ∑®œ‘ æ»˝Ω«–Œ
+	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight); // Ëé∑ÂèñÁºìÂÜ≤Â§ßÂ∞è
+	// ËøôÈáåÂéüÊù•ÂÜôÊàê‰∫Ü glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferWidth); ÂØºËá¥Êó†Ê≥ïÊòæÁ§∫‰∏âËßíÂΩ¢
 
 
-	// …Ë÷√…œœ¬Œƒ
+	// ËÆæÁΩÆ‰∏ä‰∏ãÊñá
 	glfwMakeContextCurrent(mainWindow);
 
-	// ¥¶¿Ìº¸≈Ã∫Õ Û±Í ‰»Î
-	CreateCallbacks();
-	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // “˛≤ÿ Û±Í
+	// Â§ÑÁêÜÈîÆÁõòÂíåÈº†Ê†áËæìÂÖ•
+	createCallbacks();
+	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // ÈöêËóèÈº†Ê†á
 
-	// ‘ –Ì π”√ GLEW  µ—Èπ¶ƒ‹
+	// ÂÖÅËÆ∏‰ΩøÁî® GLEW ÂÆûÈ™åÂäüËÉΩ
 	glewExperimental = GL_TRUE;
 
 	if (glewInit() != GLEW_OK)
@@ -71,22 +71,22 @@ int Window::Initialise()
 		return 1;
 	}
 
-	glEnable(GL_DEPTH_TEST); // ø™∆Ù…Ó∂»≤‚ ‘
+	glEnable(GL_DEPTH_TEST); // ÂºÄÂêØÊ∑±Â∫¶ÊµãËØï
 
-	// ¥¥Ω®≤¢…Ë÷√…Ë÷√ ”ø⁄¥Û–°
+	// ÂàõÂª∫Âπ∂ËÆæÁΩÆËÆæÁΩÆËßÜÂè£Â§ßÂ∞è
 	glViewport(0, 0, bufferWidth, bufferHeight);
 
-	glfwSetWindowUserPointer(mainWindow, this); // …Ë÷√¥∞ø⁄”√ªß÷∏’Î
+	glfwSetWindowUserPointer(mainWindow, this); // ËÆæÁΩÆÁ™óÂè£Áî®Êà∑ÊåáÈíà
 }
 
-GLfloat Window::GetXChange()
+GLfloat Window::getXChange()
 {
 	GLfloat theChange = xChange;
 	xChange = 0.0f;
 	return theChange;
 }
 
-GLfloat Window::GetYChange()
+GLfloat Window::getYChange()
 {
 	GLfloat theChange = yChange;
 	yChange = 0.0f;
@@ -99,37 +99,37 @@ Window::~Window()
 	glfwTerminate();
 }
 
-void Window::CreateCallbacks()
+void Window::createCallbacks()
 {
-	glfwSetKeyCallback(mainWindow, HandleKeys); // …Ë÷√º¸≈Ã∞¥º¸ªÿµ˜∫Ø ˝
-	glfwSetCursorPosCallback(mainWindow, HandleMouse); // …Ë÷√ Û±Í“∆∂Øªÿµ˜∫Ø ˝
+	glfwSetKeyCallback(mainWindow, handleKeys); // ËÆæÁΩÆÈîÆÁõòÊåâÈîÆÂõûË∞ÉÂáΩÊï∞
+	glfwSetCursorPosCallback(mainWindow, handleMouse); // ËÆæÁΩÆÈº†Ê†áÁßªÂä®ÂõûË∞ÉÂáΩÊï∞
 }
 
-void Window::HandleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode)
 {
-	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window)); // ªÒ»°¥∞ø⁄”√ªß÷∏’Î
+	auto theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window)); // Ëé∑ÂèñÁ™óÂè£Áî®Êà∑ÊåáÈíà
 
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) // ∞¥œ¬ ESC º¸
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) // Êåâ‰∏ã ESC ÈîÆ
 	{
-		glfwSetWindowShouldClose(window, GL_TRUE); // …Ë÷√¥∞ø⁄”¶∏√πÿ±’
+		glfwSetWindowShouldClose(window, GL_TRUE); // ËÆæÁΩÆÁ™óÂè£Â∫îËØ•ÂÖ≥Èó≠
 	}
 
-	if (key >= 0 && key < 1024) // »Áπ˚º¸»Îµƒkey «”––ß÷µ
+	if (key >= 0 && key < 1024) // Â¶ÇÊûúÈîÆÂÖ•ÁöÑkeyÊòØÊúâÊïàÂÄº
 	{
-		if (action == GLFW_PRESS) // ∞¥œ¬
+		if (action == GLFW_PRESS) // Êåâ‰∏ã
 		{
 			theWindow->keys[key] = true;
 		}
-		else if (action == GLFW_RELEASE) //  Õ∑≈
+		else if (action == GLFW_RELEASE) // ÈáäÊîæ
 		{
 			theWindow->keys[key] = false;
 		}
 	}
 }
 
-void Window::HandleMouse(GLFWwindow* window, double xPos, double yPos)
+void Window::handleMouse(GLFWwindow* window, double xPos, double yPos)
 {
-	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window)); // ªÒ»°¥∞ø⁄”√ªß÷∏’Î
+	auto theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window)); // Ëé∑ÂèñÁ™óÂè£Áî®Êà∑ÊåáÈíà
 
 	if (theWindow->mouseFirstMoved)
 	{
@@ -139,7 +139,7 @@ void Window::HandleMouse(GLFWwindow* window, double xPos, double yPos)
 	}
 
 	theWindow->xChange = xPos - theWindow->lastX;
-	theWindow->yChange = theWindow->lastY - yPos; // ±‹√‚…œœ¬µﬂµπ
+	theWindow->yChange = theWindow->lastY - yPos; // ÈÅøÂÖç‰∏ä‰∏ãÈ¢†ÂÄí
 
 	theWindow->lastX = xPos;
 	theWindow->lastY = yPos;

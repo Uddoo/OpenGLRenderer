@@ -2,20 +2,30 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "ShadowMap.h"
 
 class Light
 {
 public:
 	Light();
-	Light(GLfloat red, GLfloat green, GLfloat blue,
-		GLfloat aIntensity, GLfloat dIntensity);
+	Light(GLuint shadowWidth, GLuint shadowHeight,
+	      GLfloat red, GLfloat green, GLfloat blue,
+	      GLfloat aIntensity, GLfloat dIntensity);
+
+	// è·å–é˜´å½±è´´å›¾
+	ShadowMap* getShadowMap() { return shadowMap; }
 
 	~Light();
 
 protected:
-	glm::vec3 colour; // ¹âÔ´ÑÕÉ«
-	GLfloat ambientIntensity; // »·¾³¹âÇ¿¶È
+	glm::vec3 colour; // å…‰æºé¢œè‰²
+	GLfloat ambientIntensity; // ç¯å¢ƒå…‰å¼ºåº¦
 
+	GLfloat diffuseIntensity; // æ¼«åå°„å¼ºåº¦
 
-	GLfloat diffuseIntensity; // Âş·´ÉäÇ¿¶È
+	glm::mat4 lightProj; // å…‰æºæŠ•å½±çŸ©é˜µ
+
+	ShadowMap* shadowMap; // é˜´å½±è´´å›¾
 };

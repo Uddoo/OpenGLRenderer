@@ -4,13 +4,14 @@ Camera::Camera()
 {
 }
 
-Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
+Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed,
+               GLfloat startTurnSpeed)
 {
 	position = startPosition;
 	worldUp = startUp;
 	yaw = startYaw;
 	pitch = startPitch;
-	front = glm::vec3(0.0f, 0.0f, -1.0f); // œ‡ª˙«∞œÚ¡ø£¨≥ØœÚz÷·∏∫œÚ
+	front = glm::vec3(0.0f, 0.0f, -1.0f); // Áõ∏Êú∫ÂâçÂêëÈáèÔºåÊúùÂêëzËΩ¥Ë¥üÂêë
 
 	moveSpeed = startMoveSpeed;
 	turnSpeed = startTurnSpeed;
@@ -18,7 +19,7 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	Update();
 }
 
-void Camera::KeyControl(bool* keys, GLfloat deltaTime)
+void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
 	GLfloat velocity = moveSpeed * deltaTime;
 	if (keys[GLFW_KEY_W])
@@ -47,7 +48,7 @@ void Camera::KeyControl(bool* keys, GLfloat deltaTime)
 	}
 }
 
-void Camera::MouseControl(GLfloat xChange, GLfloat yChange)
+void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
 {
 	xChange *= turnSpeed;
 	yChange *= turnSpeed;
@@ -67,9 +68,9 @@ void Camera::MouseControl(GLfloat xChange, GLfloat yChange)
 	Update();
 }
 
-glm::mat4 Camera::CalculateViewMatrix()
+glm::mat4 Camera::calculateViewMatrix()
 {
-	return glm::lookAt(position, position + front, up);
+	return lookAt(position, position + front, up);
 }
 
 Camera::~Camera()
@@ -81,8 +82,8 @@ void Camera::Update()
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.y = sin(glm::radians(pitch));
 	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-	front = glm::normalize(front);
+	front = normalize(front);
 
-	right = glm::normalize(glm::cross(front, worldUp));
-	up = glm::normalize(glm::cross(right, front));
+	right = normalize(cross(front, worldUp));
+	up = normalize(cross(right, front));
 }

@@ -11,39 +11,39 @@ public:
 	Window();
 	Window(GLint windowWidth, GLint windowHeight);
 
-	int Initialise(); // ³õÊ¼»¯
+	int Initialise(); // åˆå§‹åŒ–
 
-	GLint GetBufferWidth() const { return bufferWidth; }
-	GLint GetBufferHeight() const { return bufferHeight; }
+	GLint getBufferWidth() const { return bufferWidth; }
+	GLint getBufferHeight() const { return bufferHeight; }
 
-	bool GetShouldClose() const { return glfwWindowShouldClose(mainWindow); } // »ñÈ¡´°¿ÚÊÇ·ñÓ¦¸Ã¹Ø±Õ
+	bool getShouldClose() const { return glfwWindowShouldClose(mainWindow); } // è·å–çª—å£æ˜¯å¦åº”è¯¥å…³é—­
 
-	bool* GetKeys() { return keys; } // »ñÈ¡¼üÅÌ°´¼üÊı×é
+	bool* getsKeys() { return keys; } // è·å–é”®ç›˜æŒ‰é”®æ•°ç»„
 
-	GLfloat GetXChange();
-	GLfloat GetYChange();
+	GLfloat getXChange();
+	GLfloat getYChange();
 
-	void SwapBuffers() const { glfwSwapBuffers(mainWindow); } // ½»»»»º³åÇø
+	void swapBuffers() const { glfwSwapBuffers(mainWindow); } // äº¤æ¢ç¼“å†²åŒº
 
 	~Window();
 
 private:
-	GLFWwindow* mainWindow; // Ö÷´°¿Ú
+	GLFWwindow* mainWindow; // ä¸»çª—å£
 
-	GLint width, height; // ´°¿Ú¿í¶ÈºÍ¸ß¶È
-	GLint bufferWidth, bufferHeight; // »º³åÇø¿í¶ÈºÍ¸ß¶È
+	GLint width, height; // çª—å£å®½åº¦å’Œé«˜åº¦
+	GLint bufferWidth, bufferHeight; // ç¼“å†²åŒºå®½åº¦å’Œé«˜åº¦
 
-	bool keys[1024]; // ¼üÅÌ°´¼ü
+	bool keys[1024]; // é”®ç›˜æŒ‰é”®
 
 	GLfloat lastX;
 	GLfloat lastY;
 	GLfloat xChange = 0.0f;
 	GLfloat yChange = 0.0f;
 
-	bool mouseFirstMoved; // Êó±êÊÇ·ñµÚÒ»´ÎÒÆ¶¯
+	bool mouseFirstMoved; // é¼ æ ‡æ˜¯å¦ç¬¬ä¸€æ¬¡ç§»åŠ¨
 
-	void CreateCallbacks(); // ´´½¨»Øµ÷º¯Êı
-	static void HandleKeys(GLFWwindow* window, int key, int code, int action, int mode); // ¼üÅÌ°´¼ü»Øµ÷º¯Êı
-	static void HandleMouse(GLFWwindow* window, double xPos, double yPos); // Êó±êÒÆ¶¯»Øµ÷º¯Êı
+	void createCallbacks(); // åˆ›å»ºå›è°ƒå‡½æ•°
+	static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode); // é”®ç›˜æŒ‰é”®å›è°ƒå‡½æ•°
+	static void handleMouse(GLFWwindow* window, double xPos, double yPos); // é¼ æ ‡ç§»åŠ¨å›è°ƒå‡½æ•°
 };
 
