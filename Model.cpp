@@ -133,7 +133,9 @@ void Model::LoadMaterials(const aiScene* scene)
 				// 创建纹理
 				textureList[i] = new Texture(texPath.c_str());
 
-				if (!textureList[i]->LoadTexture()) // 尝试加载纹理，如果不成功打印错误信息并重置
+				// 尝试加载纹理，如果不成功打印错误信息并重置
+				// 这里原来使用的LoadTexture()，但是在加载纹理时，会将图片的颜色通道转换为RGBA，而我们的图片是RGB，因此会出现问题
+				if (!textureList[i]->LoadTextureA()) 
 				{
 					printf("Failed to load texture at: %s", texPath.c_str());
 					delete textureList[i];
