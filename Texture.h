@@ -10,19 +10,19 @@ public:
 	Texture();
 	Texture(const char* fileLoc);
 
-	bool LoadTexture(); // ¼ÓÔØÃ»ÓĞAlphaÍ¨µÀµÄÎÆÀí£¬·µ»ØÊÇ·ñ¼ÓÔØ³É¹¦£¬²»³É¹¦Ôò¼ÓÔØÎÒÃÇ¹æ¶¨µÄÄ¬ÈÏÎÆÀí
-	bool LoadTextureA(); // ¼ÓÔØÓĞAlphaÍ¨µÀµÄÎÆÀí
+	bool LoadTexture(); // åŠ è½½æ²¡æœ‰Alphaé€šé“çš„çº¹ç†ï¼Œè¿”å›æ˜¯å¦åŠ è½½æˆåŠŸï¼Œä¸æˆåŠŸåˆ™åŠ è½½æˆ‘ä»¬è§„å®šçš„é»˜è®¤çº¹ç†
+	bool LoadTextureA(); // åŠ è½½æœ‰Alphaé€šé“çš„çº¹ç†
 
-	void UseTexture(); // Ê¹ÓÃÎÆÀí
-	void ClearTexture(); // Çå³ıÎÆÀí
+	void UseTexture(); // ä½¿ç”¨çº¹ç†
+	void ClearTexture(); // æ¸…é™¤çº¹ç†
 
 	~Texture();
 
 private:
-	GLuint textureID; // ÎÆÀíID
-	int width, height; // ÎÆÀí¿í¶ÈºÍ¸ß¶È
-	int bitDepth; // ÎÆÀíÎ»Éî¶È
+	GLuint textureID; // çº¹ç†ID
+	int width, height; // çº¹ç†å®½åº¦å’Œé«˜åº¦
+	int bitDepth; // çº¹ç†ä½æ·±åº¦
 
-	const char* fileLocation; // ÎÆÀíÎÄ¼şÎ»ÖÃ
+	const char* fileLocation; // çº¹ç†æ–‡ä»¶ä½ç½®
 };
 

@@ -7,7 +7,7 @@ Model::Model()
 void Model::LoadModel(const std::string& fileName)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices); // Èı½ÇĞÎ»¯¡¢×ªUV×ø±ê¡¢Æ½»¬·¨Ïß¡¢Í¬Î»ÖÃÁ½µãºÏ²¢
+	const aiScene* scene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices); // ä¸‰è§’å½¢åŒ–ã€è½¬UVåæ ‡ã€å¹³æ»‘æ³•çº¿ã€åŒä½ç½®ä¸¤ç‚¹åˆå¹¶
 
 	if (!scene)
 	{
@@ -15,9 +15,9 @@ void Model::LoadModel(const std::string& fileName)
 		return;
 	}
 
-	LoadNode(scene->mRootNode, scene); // µİ¹é¼ÓÔØ½Úµã
+	LoadNode(scene->mRootNode, scene); // é€’å½’åŠ è½½èŠ‚ç‚¹
 
-	LoadMaterials(scene); // ¼ÓÔØ²ÄÖÊ
+	LoadMaterials(scene); // åŠ è½½æè´¨
 }
 
 void Model::RenderModel()
@@ -73,14 +73,14 @@ void Model::LoadNode(aiNode* node, const aiScene* scene)
 
 void Model::LoadMesh(aiMesh* mesh, const aiScene* scene)
 {
-	std::vector<GLfloat> vertices; // ¶¥µã
-	std::vector<unsigned int> indices; // Ë÷Òı
+	std::vector<GLfloat> vertices; // é¡¶ç‚¹
+	std::vector<unsigned int> indices; // ç´¢å¼•
 
 	for (size_t i = 0; i < mesh->mNumVertices; i++)
 	{
-		vertices.insert(vertices.end(), { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z }); // ¶¥µã×ø±ê
+		vertices.insert(vertices.end(), { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z }); // é¡¶ç‚¹åæ ‡
 
-		// ÔÚmeshµÄÄ³Ò»¶¨¿ÉÄÜÃ»ÓĞÎÆÀí£¬Ò²¿ÉÄÜÓĞÎÆÀí£¬Òò´ËÎÒÃÇĞèÒª¼ì²é
+		// åœ¨meshçš„æŸä¸€å®šå¯èƒ½æ²¡æœ‰çº¹ç†ï¼Œä¹Ÿå¯èƒ½æœ‰çº¹ç†ï¼Œå› æ­¤æˆ‘ä»¬éœ€è¦æ£€æŸ¥
 		if (mesh->mTextureCoords[0])
 		{
 			vertices.insert(vertices.end(), { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y });
@@ -90,8 +90,8 @@ void Model::LoadMesh(aiMesh* mesh, const aiScene* scene)
 			vertices.insert(vertices.end(), { 0.0f, 0.0f });
 		}
 
-		vertices.insert(vertices.end(), { -mesh->mNormals->x, -mesh->mNormals->y, -mesh->mNormals->z }); // ²åÈë·¨ÏßÏòÁ¿×ø±ê
-		// ÒòÎªÔÚshader.fragÖĞ¼ÆËã diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f); Ê±£¬Ã»ÓĞ¶Ônormalize(direction)·´×ª´¦Àí
+		vertices.insert(vertices.end(), { -mesh->mNormals->x, -mesh->mNormals->y, -mesh->mNormals->z }); // æ’å…¥æ³•çº¿å‘é‡åæ ‡
+		// å› ä¸ºåœ¨shader.fragä¸­è®¡ç®— diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f); æ—¶ï¼Œæ²¡æœ‰å¯¹normalize(direction)åè½¬å¤„ç†
 	}
 
 	for (size_t i = 0; i < mesh->mNumFaces; i++)
@@ -119,22 +119,22 @@ void Model::LoadMaterials(const aiScene* scene)
 
 		textureList[i] = nullptr;
 
-		if (material->GetTextureCount(aiTextureType_DIFFUSE)) // Èç¹ûÎÆÀíÖĞÓĞÂş·´ÉäÎÆÀí£¬ÔÚassimp¿âÖĞ£¬GetTextureCount(aiTextureType_DIFFUSE)ÊÇÓÃÓÚ»ñÈ¡Ä£ĞÍÖĞÖ¸¶¨ÀàĞÍµÄÎÆÀíÊıÁ¿µÄº¯Êı¡£ÆäÖĞ£¬aiTextureType_DIFFUSE±íÊ¾Âş·´ÉäÎÆÀí¡£
+		if (material->GetTextureCount(aiTextureType_DIFFUSE)) // å¦‚æœçº¹ç†ä¸­æœ‰æ¼«åå°„çº¹ç†ï¼Œåœ¨assimpåº“ä¸­ï¼ŒGetTextureCount(aiTextureType_DIFFUSE)æ˜¯ç”¨äºè·å–æ¨¡å‹ä¸­æŒ‡å®šç±»å‹çš„çº¹ç†æ•°é‡çš„å‡½æ•°ã€‚å…¶ä¸­ï¼ŒaiTextureType_DIFFUSEè¡¨ç¤ºæ¼«åå°„çº¹ç†ã€‚
 		{
 			aiString path;
 			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
 			{
-				// ´¦ÀíÂ·¾¶
+				// å¤„ç†è·¯å¾„
 				int idx = std::string(path.data).rfind("\\");
-				std::string filename = std::string(path.data).substr(idx + 1); // ½«µØÖ·ĞÅÏ¢ÌáÉıÒ»¸ö\\
+				std::string filename = std::string(path.data).substr(idx + 1); // å°†åœ°å€ä¿¡æ¯æå‡ä¸€ä¸ª\\
 
 				std::string texPath = std::string("Textures/") + filename;
 
-				// ´´½¨ÎÆÀí
+				// åˆ›å»ºçº¹ç†
 				textureList[i] = new Texture(texPath.c_str());
 
-				// ³¢ÊÔ¼ÓÔØÎÆÀí£¬Èç¹û²»³É¹¦´òÓ¡´íÎóĞÅÏ¢²¢ÖØÖÃ
-				// ÕâÀïÔ­À´Ê¹ÓÃµÄLoadTexture()£¬µ«ÊÇÔÚ¼ÓÔØÎÆÀíÊ±£¬»á½«Í¼Æ¬µÄÑÕÉ«Í¨µÀ×ª»»ÎªRGBA£¬¶øÎÒÃÇµÄÍ¼Æ¬ÊÇRGB£¬Òò´Ë»á³öÏÖÎÊÌâ
+				// å°è¯•åŠ è½½çº¹ç†ï¼Œå¦‚æœä¸æˆåŠŸæ‰“å°é”™è¯¯ä¿¡æ¯å¹¶é‡ç½®
+				// è¿™é‡ŒåŸæ¥ä½¿ç”¨çš„LoadTexture()ï¼Œä½†æ˜¯åœ¨åŠ è½½çº¹ç†æ—¶ï¼Œä¼šå°†å›¾ç‰‡çš„é¢œè‰²é€šé“è½¬æ¢ä¸ºRGBAï¼Œè€Œæˆ‘ä»¬çš„å›¾ç‰‡æ˜¯RGBï¼Œå› æ­¤ä¼šå‡ºç°é—®é¢˜
 				if (!textureList[i]->LoadTextureA()) 
 				{
 					printf("Failed to load texture at: %s", texPath.c_str());

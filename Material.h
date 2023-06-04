@@ -8,12 +8,12 @@ public:
 	Material();
 	Material(GLfloat sIntensity, GLfloat shine); // sIntensity = specular intensity, shine = shininess
 
-	void UseMaterial(GLuint specularIntensityLocation, GLuint shininessLocation); // Ê¹ÓÃ²ÄÖÊ
+	void UseMaterial(GLuint specularIntensityLocation, GLuint shininessLocation); // ä½¿ç”¨æè´¨
 
 	~Material();
 
 private:
-	GLfloat specularIntensity; // ¾µÃæ¹âÇ¿¶È
-	GLfloat shininess; // ¸ß¹âÖ¸Êı
+	GLfloat specularIntensity; // é•œé¢å…‰å¼ºåº¦
+	GLfloat shininess; // é«˜å…‰æŒ‡æ•°
 };
 

@@ -23,18 +23,18 @@ void SpotLight::UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLo
 	GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation,
 	GLuint edgeLocation)
 {
-	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // ÉèÖÃ»·¾³¹âÑÕÉ«
-	glUniform1f(ambientIntensityLocation, ambientIntensity); // ÉèÖÃ»·¾³¹âÇ¿¶È
+	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z); // è®¾ç½®ç¯å¢ƒå…‰é¢œè‰²
+	glUniform1f(ambientIntensityLocation, ambientIntensity); // è®¾ç½®ç¯å¢ƒå…‰å¼ºåº¦
 
-	glUniform1f(diffuseIntensityLocation, diffuseIntensity); // ÉèÖÃÂş·´ÉäÇ¿¶È
+	glUniform1f(diffuseIntensityLocation, diffuseIntensity); // è®¾ç½®æ¼«åå°„å¼ºåº¦
 
-	glUniform3f(positionLocation, position.x, position.y, position.z); // ÉèÖÃµã¹âÔ´Î»ÖÃ
-	glUniform1f(constantLocation, constant); // ÉèÖÃµã¹âÔ´³£Êı
-	glUniform1f(linearLocation, linear); // ÉèÖÃµã¹âÔ´ÏßĞÔ
-	glUniform1f(exponentLocation, exponent); // ÉèÖÃµã¹âÔ´Ö¸Êı
+	glUniform3f(positionLocation, position.x, position.y, position.z); // è®¾ç½®ç‚¹å…‰æºä½ç½®
+	glUniform1f(constantLocation, constant); // è®¾ç½®ç‚¹å…‰æºå¸¸æ•°
+	glUniform1f(linearLocation, linear); // è®¾ç½®ç‚¹å…‰æºçº¿æ€§
+	glUniform1f(exponentLocation, exponent); // è®¾ç½®ç‚¹å…‰æºæŒ‡æ•°
 
-	glUniform3f(directionLocation, direction.x, direction.y, direction.z); // ÉèÖÃ¾Û¹âµÆ·½Ïò
-	glUniform1f(edgeLocation, procEdge); // ÉèÖÃ¾Û¹âµÆ±ßÔµ
+	glUniform3f(directionLocation, direction.x, direction.y, direction.z); // è®¾ç½®èšå…‰ç¯æ–¹å‘
+	glUniform1f(edgeLocation, procEdge); // è®¾ç½®èšå…‰ç¯è¾¹ç¼˜
 }
 
 void SpotLight::SetFlash(glm::vec3 pos, glm::vec3 dir)

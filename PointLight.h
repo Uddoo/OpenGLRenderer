@@ -18,10 +18,10 @@ public:
 	~PointLight();
 
 protected:
-	glm::vec3 position; // ¹âÔ´Î»ÖÃ
+	glm::vec3 position; // å…‰æºä½ç½®
 
 	// exponent * x ^ 2 + linear  * x + constant
-	GLfloat constant; // ³£Êı
-	GLfloat linear; // ÏßĞÔ
-	GLfloat exponent; // Ö¸Êı
+	GLfloat constant; // å¸¸æ•°
+	GLfloat linear; // çº¿æ€§
+	GLfloat exponent; // æŒ‡æ•°
 };

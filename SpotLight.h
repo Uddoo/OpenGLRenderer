@@ -24,8 +24,8 @@ public:
 	~SpotLight();
 
 private:
-	glm::vec3 direction; // 光源方向
+	glm::vec3 direction; // 鍏夋簮鏂瑰悜
 
-	GLfloat edge, procEdge; // 光源边缘
+	GLfloat edge, procEdge; // 鍏夋簮杈圭紭
 };
 

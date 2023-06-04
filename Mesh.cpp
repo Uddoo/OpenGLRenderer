@@ -12,59 +12,59 @@ void Mesh::CreateMesh(GLfloat* vertices, unsigned* indices, unsigned numOfVertic
 {
 	indexCount = numOfIndices;
 
-	glGenVertexArrays(1, &VAO); // Éú³ÉÒ»¸ö VAO
-	glBindVertexArray(VAO); // °ó¶¨ VAO
+	glGenVertexArrays(1, &VAO); // ç”Ÿæˆä¸€ä¸ª VAO
+	glBindVertexArray(VAO); // ç»‘å®š VAO
 
-	glGenBuffers(1, &IBO); // Éú³ÉÒ»¸ö IBO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // °ó¶¨ IBO
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * numOfIndices, indices, GL_STATIC_DRAW); // °ÑË÷ÒıÊı×é¸´ÖÆµ½»º³åÖĞ¹© OpenGL Ê¹ÓÃ
+	glGenBuffers(1, &IBO); // ç”Ÿæˆä¸€ä¸ª IBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // ç»‘å®š IBO
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * numOfIndices, indices, GL_STATIC_DRAW); // æŠŠç´¢å¼•æ•°ç»„å¤åˆ¶åˆ°ç¼“å†²ä¸­ä¾› OpenGL ä½¿ç”¨
 
-	glGenBuffers(1, &VBO); // Éú³ÉÒ»¸ö VBO
-	glBindBuffer(GL_ARRAY_BUFFER, VBO); // °ó¶¨ VBO
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numOfVertices, vertices, GL_STATIC_DRAW); // °Ñ¶¥µãÊı×é¸´ÖÆµ½»º³åÖĞ¹© OpenGL Ê¹ÓÃ
+	glGenBuffers(1, &VBO); // ç”Ÿæˆä¸€ä¸ª VBO
+	glBindBuffer(GL_ARRAY_BUFFER, VBO); // ç»‘å®š VBO
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numOfVertices, vertices, GL_STATIC_DRAW); // æŠŠé¡¶ç‚¹æ•°ç»„å¤åˆ¶åˆ°ç¼“å†²ä¸­ä¾› OpenGL ä½¿ç”¨
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, 0); // ÉèÖÃ¶¥µãÊôĞÔÖ¸Õë
-	glEnableVertexAttribArray(0); // ÆôÓÃ¶¥µãÊôĞÔ
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void*)(sizeof(vertices[0]) * 3)); // ÉèÖÃ²ÄÖÊÊôĞÔÖ¸Õë
-	glEnableVertexAttribArray(1); // ÆôÓÃ²ÄÖÊÊôĞÔ
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void*)(sizeof(vertices[0]) * 5)); // ÉèÖÃ·¨ÏßÊôĞÔÖ¸Õë
-	glEnableVertexAttribArray(2); // ÆôÓÃ·¨ÏßÊôĞÔ
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, 0); // è®¾ç½®é¡¶ç‚¹å±æ€§æŒ‡é’ˆ
+	glEnableVertexAttribArray(0); // å¯ç”¨é¡¶ç‚¹å±æ€§
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void*)(sizeof(vertices[0]) * 3)); // è®¾ç½®æè´¨å±æ€§æŒ‡é’ˆ
+	glEnableVertexAttribArray(1); // å¯ç”¨æè´¨å±æ€§
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 8, (void*)(sizeof(vertices[0]) * 5)); // è®¾ç½®æ³•çº¿å±æ€§æŒ‡é’ˆ
+	glEnableVertexAttribArray(2); // å¯ç”¨æ³•çº¿å±æ€§
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // ½â°ó VBO
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // è§£ç»‘ VBO
 
-	glBindVertexArray(0); // ½â°ó VAO
+	glBindVertexArray(0); // è§£ç»‘ VAO
 
-	// IBO¡¢EBOµÄ½â°óÓ¦¸ÃÔÚVAOµÄ½â°óÖ®ºó
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // ½â°ó IBO
+	// IBOã€EBOçš„è§£ç»‘åº”è¯¥åœ¨VAOçš„è§£ç»‘ä¹‹å
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // è§£ç»‘ IBO
 }
 
 void Mesh::RenderMesh()
 {
-	glBindVertexArray(VAO); // °ó¶¨ VAO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // °ó¶¨ IBO
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0); // »æÖÆÈı½ÇĞÎ
-	glBindVertexArray(0); // ½â°ó VAO
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // ½â°ó IBO
+	glBindVertexArray(VAO); // ç»‘å®š VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); // ç»‘å®š IBO
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0); // ç»˜åˆ¶ä¸‰è§’å½¢
+	glBindVertexArray(0); // è§£ç»‘ VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // è§£ç»‘ IBO
 }
 
 void Mesh::ClearMesh()
 {
-	// ÏÈÇå¿ÕIBO¡¢VBO£¬ÔÙÇå¿ÕVAO
-	// ¼ì²éIBOÊÇ·ñÎª¿Õ£¬²»Îª¿ÕµÄ»°Çå¿Õ
+	// å…ˆæ¸…ç©ºIBOã€VBOï¼Œå†æ¸…ç©ºVAO
+	// æ£€æŸ¥IBOæ˜¯å¦ä¸ºç©ºï¼Œä¸ä¸ºç©ºçš„è¯æ¸…ç©º
 	if (IBO != 0)
 	{
 		glDeleteBuffers(1, &IBO);
 		IBO = 0;
 	}
 
-	// ¼ì²éVBOÊÇ·ñÎª¿Õ£¬²»Îª¿ÕµÄ»°Çå¿Õ
+	// æ£€æŸ¥VBOæ˜¯å¦ä¸ºç©ºï¼Œä¸ä¸ºç©ºçš„è¯æ¸…ç©º
 	if (VBO != 0)
 	{
 		glDeleteBuffers(1, &VBO);
 		VBO = 0;
 	}
 
-	// ¼ì²éVAOÊÇ·ñÎª¿Õ£¬²»Îª¿ÕµÄ»°Çå¿Õ
+	// æ£€æŸ¥VAOæ˜¯å¦ä¸ºç©ºï¼Œä¸ä¸ºç©ºçš„è¯æ¸…ç©º
 	if (VAO != 0)
 	{
 		glDeleteVertexArrays(1, &VAO);

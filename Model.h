@@ -5,7 +5,7 @@
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h> // ºó´¦Àí
+#include <assimp/postprocess.h> // åå¤„ç†
 
 #include "Mesh.h"
 #include "Texture.h"
@@ -15,19 +15,19 @@ class Model
 public:
 	Model();
 
-	void LoadModel(const std::string& fileName); // ¼ÓÔØÄ£ĞÍ
-	void RenderModel(); // äÖÈ¾Ä£ĞÍ
-	void ClearModel(); // Çå³ıÄ£ĞÍ
+	void LoadModel(const std::string& fileName); // åŠ è½½æ¨¡å‹
+	void RenderModel(); // æ¸²æŸ“æ¨¡å‹
+	void ClearModel(); // æ¸…é™¤æ¨¡å‹
 
 	~Model();
 
 private:
-	void LoadNode(aiNode* node, const aiScene* scene); // ¼ÓÔØ½Úµã
-	void LoadMesh(aiMesh* mesh, const aiScene* scene); // ¼ÓÔØÍø¸ñ
-	void LoadMaterials(const aiScene* scene); // ¼ÓÔØ³¡¾°ÖĞËùÓĞÍø¸ñµÄ²ÄÖÊ
+	void LoadNode(aiNode* node, const aiScene* scene); // åŠ è½½èŠ‚ç‚¹
+	void LoadMesh(aiMesh* mesh, const aiScene* scene); // åŠ è½½ç½‘æ ¼
+	void LoadMaterials(const aiScene* scene); // åŠ è½½åœºæ™¯ä¸­æ‰€æœ‰ç½‘æ ¼çš„æè´¨
 
 	std::vector<Mesh*> meshList;
 	std::vector<Texture*> textureList;
-	std::vector<unsigned int> meshToTex; // Íø¸ñµ½ÎÆÀíµÄÓ³Éä
+	std::vector<unsigned int> meshToTex; // ç½‘æ ¼åˆ°çº¹ç†çš„æ˜ å°„
 };
 

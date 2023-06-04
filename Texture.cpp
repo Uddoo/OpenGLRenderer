@@ -20,28 +20,28 @@ Texture::Texture(const char* fileLoc)
 
 bool Texture::LoadTexture()
 {
-	unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0); // 使用stb_image加载纹理
+	unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 0); // 浣跨敤stb_image鍔犺浇绾圭悊
 	if (!texData)
 	{
 		printf("Failed to find: %s\n", fileLocation);
 		return false;
 	}
 
-	glGenTextures(1, &textureID); // 生成纹理
-	glBindTexture(GL_TEXTURE_2D, textureID); // 绑定纹理
+	glGenTextures(1, &textureID); // 鐢熸垚绾圭悊
+	glBindTexture(GL_TEXTURE_2D, textureID); // 缁戝畾绾圭悊
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // 设置纹理环绕方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // 璁剧疆绾圭悊鐜粫鏂瑰紡
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // 设置纹理过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // 璁剧疆绾圭悊杩囨护鏂瑰紡
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData); // 生成纹理，使用GL_RGB
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData); // 鐢熸垚绾圭悊锛屼娇鐢℅L_RGB
 
-	glGenerateMipmap(GL_TEXTURE_2D); // 生成多级渐远纹理
+	glGenerateMipmap(GL_TEXTURE_2D); // 鐢熸垚澶氱骇娓愯繙绾圭悊
 
-	glBindTexture(GL_TEXTURE_2D, 0); // 解绑纹理
+	glBindTexture(GL_TEXTURE_2D, 0); // 瑙ｇ粦绾圭悊
 
-	stbi_image_free(texData); // 释放图像内存
+	stbi_image_free(texData); // 閲婃斁鍥惧儚鍐呭瓨
 
 	return true;
 }
@@ -49,41 +49,41 @@ bool Texture::LoadTexture()
 // TODO: perf texture with alpha channel load function still has some problems, like nanosuit model
 bool Texture::LoadTextureA()
 {
-	unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 4); // 使用stb_image加载纹理
+	unsigned char* texData = stbi_load(fileLocation, &width, &height, &bitDepth, 4); // 浣跨敤stb_image鍔犺浇绾圭悊
 	if (!texData)
 	{
 		printf("Failed to find: %s\n", fileLocation);
 		return false;
 	}
 
-	glGenTextures(1, &textureID); // 生成纹理
-	glBindTexture(GL_TEXTURE_2D, textureID); // 绑定纹理
+	glGenTextures(1, &textureID); // 鐢熸垚绾圭悊
+	glBindTexture(GL_TEXTURE_2D, textureID); // 缁戝畾绾圭悊
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // 设置纹理环绕方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // 璁剧疆绾圭悊鐜粫鏂瑰紡
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // 设置纹理过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // 璁剧疆绾圭悊杩囨护鏂瑰紡
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData); // 生成纹理，使用GL_RGBA
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData); // 鐢熸垚绾圭悊锛屼娇鐢℅L_RGBA
 
-	glGenerateMipmap(GL_TEXTURE_2D); // 生成多级渐远纹理
+	glGenerateMipmap(GL_TEXTURE_2D); // 鐢熸垚澶氱骇娓愯繙绾圭悊
 
-	glBindTexture(GL_TEXTURE_2D, 0); // 解绑纹理
+	glBindTexture(GL_TEXTURE_2D, 0); // 瑙ｇ粦绾圭悊
 
-	stbi_image_free(texData); // 释放图像内存
+	stbi_image_free(texData); // 閲婃斁鍥惧儚鍐呭瓨
 
 	return true;
 }
 
 void Texture::UseTexture()
 {
-	glActiveTexture(GL_TEXTURE0); // 激活纹理单元（在某些显卡上可以忽略此设置，因为0是默认值）
-	glBindTexture(GL_TEXTURE_2D, textureID); // 绑定纹理
+	glActiveTexture(GL_TEXTURE0); // 婵�娲荤汗鐞嗗崟鍏冿紙鍦ㄦ煇浜涙樉鍗′笂鍙互蹇界暐姝よ缃紝鍥犱负0鏄粯璁ゅ�硷級
+	glBindTexture(GL_TEXTURE_2D, textureID); // 缁戝畾绾圭悊
 }
 
 void Texture::ClearTexture()
 {
-	glDeleteTextures(1, &textureID); // 删除纹理
+	glDeleteTextures(1, &textureID); // 鍒犻櫎绾圭悊
 	textureID = 0;
 	width = 0;
 	height = 0;
