@@ -176,6 +176,8 @@ Copy "$(SolutionDir)ExternalLibs\ASSIMP\bin\assimp-vc142-mt.dll" "$(TargetDir)"<
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="Math\Quat.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
